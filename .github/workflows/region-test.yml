@@ -1,0 +1,17 @@
+name: Region Check (OpenRouter)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  region-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run region check
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: node scripts/test/region-check.mjs
