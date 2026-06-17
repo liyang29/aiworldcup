@@ -36,4 +36,9 @@ export const PROVIDER = {
 
   // 统一采样温度（公平性：所有模型同参数，铁律2）
   temperature: 0.7,
+
+  // 联网搜索：给所有模型统一加 OpenRouter 的 :online（保持公平）。
+  // 让模型能搜临场伤停/首发/状态，临近开赛预测时数据更新更准。
+  // 想关掉：环境变量 LLM_SEARCH=false
+  search: (process.env.LLM_SEARCH ?? 'true') !== 'false',
 };

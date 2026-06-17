@@ -28,8 +28,9 @@ export function buildPrompt(ctx) {
       : '') +
     'Consider the venue: altitude, climate/heat, and travel can affect the teams ' +
     '(e.g. high-altitude venues favor acclimatized sides and tire visitors).\n' +
-    'If squad lists are provided, weigh the actual available players (key stars, depth, absences).\n' +
-    'Base your prediction ONLY on the context provided below. Do not look anything up.\n' +
+    'You MAY use up-to-date web information (injuries, suspensions, recent form, confirmed lineups, team news) ' +
+    'to inform your prediction. Weigh the actual available players (key stars, depth, absences).\n' +
+    'This is a pre-match prediction: commit to a final scoreline now, before kickoff.\n' +
     'Respond with STRICT JSON only, no markdown:\n' +
     '{"home_score": int, "away_score": int, "advance_team": "<team name or null>", "reasoning": "<max 2 sentences>"}';
 

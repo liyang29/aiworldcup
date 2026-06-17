@@ -7,6 +7,20 @@ if (!PROVIDER.apiKey) {
 }
 
 async function once(slug, { system, user }) {
+  const body = {
+    // 开启搜索时给 slug 加 :online（OpenRouter 联网插件，任意模型可用）
+    model: PROVIDER.search ? `${slug}:online` : slug,
+    temperature: PROVIDER.temperature,
+    max_tokens: 6000, // 容纳思考模型(Kimi等)长思考 + 搜索推理；非思考模型会提前停，不增成本
+    messages: [
+      { role: 'system', content: system },
+      { role: 'user', content: user },
+    ],
+  };
+  // json_object 强制模式与联网搜索冲突（OpenAI 直接拒）。
+  // 开搜索时不强制，靠提示词要求 + 下面的健壮解析兜底。
+  if (!PROVIDER.search) body.response_format = { type: 'json_object' };
+
   const res = await fetch(PROVIDER.baseUrl, {
     method: 'POST',
     headers: {
@@ -14,15 +28,7 @@ async function once(slug, { system, user }) {
       'Content-Type': 'application/json',
       ...PROVIDER.extraHeaders,
     },
-    body: JSON.stringify({
-      model: slug,
-      temperature: PROVIDER.temperature,
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: system },
-        { role: 'user', content: user },
-      ],
-    }),
+    body: JSON.stringify(body),
   });
 
   const data = await res.json();
@@ -38,14 +44,22 @@ async function once(slug, { system, user }) {
   const content = data?.choices?.[0]?.message?.content;
   if (!content) throw Object.assign(new Error(`[${slug}] 空返回`), { retriable: true });
 
-  // 有的模型会包 ```json，做一层兜底清洗
-  const cleaned = content.trim().replace(/^```json\s*/i, '').replace(/```$/, '');
+  return Object.assign(parseJson(content), {});
+}
+
+// 健壮解析：去 markdown 围栏；失败则抽取第一个 {...} 再试。
+function parseJson(content) {
+  const cleaned = content.trim().replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/, '');
   try {
     return JSON.parse(cleaned);
   } catch {
-    throw Object.assign(new Error(`[${slug}] JSON 解析失败: ${content.slice(0, 200)}`), {
-      retriable: true,
-    });
+    const m = cleaned.match(/\{[\s\S]*\}/);
+    if (m) {
+      try {
+        return JSON.parse(m[0]);
+      } catch {}
+    }
+    throw Object.assign(new Error(`JSON 解析失败: ${content.slice(0, 160)}`), { retriable: true });
   }
 }
 

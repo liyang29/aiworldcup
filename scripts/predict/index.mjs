@@ -10,6 +10,9 @@ const DRY = process.argv.includes('--dry');
 // --limit N：只处理最近的 N 场（验证/控制成本用）
 const limitArg = process.argv.find((a) => a.startsWith('--limit='));
 const LIMIT = limitArg ? parseInt(limitArg.split('=')[1], 10) : Infinity;
+// --within H：只处理"未来 H 小时内开赛"的比赛（cron 用：临近开赛才预测，搜索更新鲜）
+const withinArg = process.argv.find((a) => a.startsWith('--within='));
+const WITHIN_H = withinArg ? parseFloat(withinArg.split('=')[1]) : null;
 
 async function getActiveModels() {
   const { data, error } = await supabaseAdmin
@@ -21,15 +24,20 @@ async function getActiveModels() {
 }
 
 async function getUpcomingMatches() {
-  const { data, error } = await supabaseAdmin
+  const now = Date.now();
+  let q = supabaseAdmin
     .from('matches')
     .select(
       'id, stage, group_label, venue, kickoff_utc, home_team_id, away_team_id, ' +
         'home:home_team_id(name, fifa_rank, squad), away:away_team_id(name, fifa_rank, squad)'
     )
     .eq('status', 'scheduled')
-    .gt('kickoff_utc', new Date().toISOString())
-    .order('kickoff_utc', { ascending: true });
+    .gt('kickoff_utc', new Date(now).toISOString());
+  // 时间窗上限：只取未来 H 小时内开赛的
+  if (WITHIN_H != null) {
+    q = q.lt('kickoff_utc', new Date(now + WITHIN_H * 3600 * 1000).toISOString());
+  }
+  const { data, error } = await q.order('kickoff_utc', { ascending: true });
   if (error) throw new Error('读 matches 失败: ' + error.message);
   return data;
 }
