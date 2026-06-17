@@ -48,8 +48,20 @@ async function test(slug) {
   }
 }
 
+// 先打印 runner 出口 IP / 国家，判断 GitHub Actions 把请求当成哪个区域
+try {
+  const ip = await fetch('https://ipinfo.io/json').then((r) => r.json());
+  console.log(`==== Runner 出口 ==== IP ${ip.ip} | 国家 ${ip.country} | 城市 ${ip.city} | ${ip.org}\n`);
+} catch {
+  console.log('(取出口 IP 失败)\n');
+}
+
 const results = [];
 for (const m of MODELS) results.push([m, await test(m)]);
+
+// 额外测一个带联网搜索（:online）
+console.log('\n---- 带搜索 :online ----');
+await test('deepseek/deepseek-v3.2:online');
 
 console.log('\n==== 汇总 ====');
 const ok = results.filter(([, v]) => v).map(([m]) => m);
