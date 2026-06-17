@@ -30,15 +30,17 @@ export default async function SiteHeader({ locale, dict }: { locale: Locale; dic
 
   return (
     <header className="sticky top-0 z-40 border-b border-hairline bg-canvas/90 backdrop-blur">
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
-        <Link href={base} className="flex items-center gap-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded-[7px] bg-sunset text-canvas">
+      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-2 px-4 py-3 sm:gap-3 sm:px-6 lg:px-8">
+        <Link href={base} className="flex shrink-0 items-center gap-2">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[7px] bg-sunset text-canvas">
             <IconTrophy size={17} stroke={2} />
           </span>
-          <span className="text-sm font-medium tracking-tight text-ink">AI World Cup</span>
+          <span className="hidden whitespace-nowrap text-sm font-medium tracking-tight text-ink min-[400px]:inline">
+            AI World Cup
+          </span>
         </Link>
 
-        <nav className="flex items-center gap-3 text-xs text-mute sm:gap-5">
+        <nav className="flex items-center gap-2 text-xs text-mute sm:gap-5">
           <span className="hidden items-center gap-4 sm:flex sm:gap-5">
             <Link href={`${base}#next`} className="hover:text-ink">
               {nav.latest}
@@ -52,7 +54,7 @@ export default async function SiteHeader({ locale, dict }: { locale: Locale; dic
           </span>
           <Link
             href={`${base}/predict`}
-            className="rounded-full bg-sunset px-3 py-1 font-medium text-canvas"
+            className="shrink-0 whitespace-nowrap rounded-full bg-sunset px-3 py-1 font-medium text-canvas"
           >
             {dict.predict.navLabel}
           </Link>

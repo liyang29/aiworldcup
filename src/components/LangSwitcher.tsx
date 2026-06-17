@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { locales, localeNames, type Locale } from '@/i18n/config';
+import { locales, localeShort, type Locale } from '@/i18n/config';
 
 export default function LangSwitcher({ current }: { current: Locale }) {
   const pathname = usePathname();
@@ -13,16 +13,17 @@ export default function LangSwitcher({ current }: { current: Locale }) {
   };
 
   return (
-    <div className="flex items-center gap-1 rounded-full border border-hairline px-1 py-0.5 text-[11px]">
+    <div className="flex shrink-0 items-center gap-0.5 rounded-full border border-hairline px-1 py-0.5 text-[11px]">
       {locales.map((loc) => (
         <a
           key={loc}
           href={swap(loc)}
-          className={`rounded-full px-2 py-0.5 ${
+          aria-label={loc}
+          className={`rounded-full px-1.5 py-0.5 ${
             loc === current ? 'bg-hairline text-ink' : 'text-mute hover:text-body'
           }`}
         >
-          {localeNames[loc]}
+          {localeShort[loc]}
         </a>
       ))}
     </div>

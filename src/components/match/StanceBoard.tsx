@@ -102,7 +102,7 @@ export default function StanceBoard({
           {t.empty}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-2 lg:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
           {list.map((p, i) => (
             <ModelChip key={i} p={p} onClick={() => setActive(p)} />
           ))}
@@ -134,7 +134,7 @@ export default function StanceBoard({
         </span>
       </div>
 
-      <div className="grid grid-cols-3 items-start gap-2.5 sm:gap-4">
+      <div className="grid grid-cols-1 items-start gap-3 sm:grid-cols-3 sm:gap-4">
         <Column
           list={homeBacks}
           label={fill(t.backs, { team: homeName })}

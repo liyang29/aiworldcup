@@ -8,3 +8,10 @@ export const localeNames: Record<Locale, string> = {
   zh: '中文',
   es: 'Español',
 };
+
+// 移动端/紧凑场景用的短标签
+export const localeShort: Record<Locale, string> = {
+  en: 'EN',
+  zh: '中',
+  es: 'ES',
+};
