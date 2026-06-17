@@ -4,25 +4,16 @@ import { locales, defaultLocale } from '@/i18n/config';
 
 type CookieToSet = { name: string; value: string; options?: CookieOptions };
 
-function pickLocale(req: NextRequest): string {
-  const header = req.headers.get('accept-language') || '';
-  const prefs = header.split(',').map((s) => s.split(';')[0].trim().toLowerCase());
-  for (const p of prefs) {
-    const base = p.split('-')[0];
-    if ((locales as readonly string[]).includes(base)) return base;
-  }
-  return defaultLocale;
-}
-
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const hasLocale = (locales as readonly string[]).some(
     (l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`)
   );
 
-  // 无语种前缀 → 重定向到语种路径（无需触碰 Supabase）
+  // 无语种前缀 → 默认跳英文（用户可在头部手动切换语言）。
+  // 想恢复"按浏览器语言自动跳"，把 defaultLocale 换成 pickLocale(req) 即可。
   if (!hasLocale) {
-    const locale = pickLocale(req);
+    const locale = defaultLocale;
     const url = req.nextUrl.clone();
     url.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
     return NextResponse.redirect(url);
