@@ -2,6 +2,29 @@
 // PreToolUse hook：在 `git commit` 执行前，向 Claude 注入「核对进度表」提醒。
 // 仅提醒，不拦截（不设置 permissionDecision，正常权限流程继续）。
 // 输出协议见 Claude Code hooks：hookSpecificOutput.additionalContext
+//
+// 自带命令判断：只在命令确为 git commit 时才提醒（settings.json 的 if 过滤
+// 在部分环境不生效，这里读 stdin 自行判断，双保险，避免在普通 Bash 上误触发）。
+
+const readStdin = () =>
+  new Promise((resolve) => {
+    let s = '';
+    process.stdin.on('data', (c) => (s += c));
+    process.stdin.on('end', () => resolve(s));
+    setTimeout(() => resolve(s), 200); // 容错：无 stdin 时不卡住
+  });
+
+const input = await readStdin();
+let command = '';
+try {
+  command = JSON.parse(input || '{}')?.tool_input?.command || '';
+} catch {
+  command = '';
+}
+
+// 只匹配真正的 git commit（排除 git log --commit 之类的误伤）
+const isGitCommit = /\bgit\s+(-[^\s]+\s+)*commit\b/.test(command);
+if (!isGitCommit) process.exit(0); // 非 commit：静默退出，不提醒
 
 const reminder = [
   '【提交前提醒 · 进度表核对】',

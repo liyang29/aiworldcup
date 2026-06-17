@@ -35,3 +35,6 @@ Thumbs.db
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 设计参考仓库（本地参考用，不入库）
+design-ref/
