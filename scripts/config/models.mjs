@@ -38,9 +38,9 @@ export const MODELS = [
   // 解锁后：把对应行的 active 改成 true（slug 以届时平台实际值为准），
   //         再跑一次 `node scripts/seed/models.mjs` 即可入列，业务逻辑无需改动。
   // ============================================================
-  { name: 'GPT-5.5',          provider: 'OpenAI',    slug: 'openai/gpt-5.5',                display_order: 1, active: false },
-  { name: 'Claude Opus 4.8',  provider: 'Anthropic', slug: 'anthropic/claude-opus-4.8',     display_order: 2, active: false },
-  { name: 'Gemini 3.5 Flash', provider: 'Google',    slug: 'google/gemini-3.5-flash',       display_order: 3, active: false },
+  { name: 'GPT-5.5',          provider: 'OpenAI',    slug: 'openai/gpt-5.5',                display_order: 1, active: true },
+  { name: 'Claude Opus 4.8',  provider: 'Anthropic', slug: 'anthropic/claude-opus-4.8',     display_order: 2, active: true },
+  { name: 'Gemini 3.5 Flash', provider: 'Google',    slug: 'google/gemini-3.5-flash',       display_order: 3, active: true },
 ];
 
 // 只取启用的模型（预测引擎用这个）

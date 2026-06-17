@@ -1,0 +1,101 @@
+{
+  "nav": { "back": "Back", "home": "Home", "latest": "Latest match", "leaderboard": "Leaderboard", "schedule": "Schedule" },
+  "footer": {
+    "disclaimer": "Points-only entertainment. No cash, withdrawals, or betting.",
+    "tagline": "Humans vs AI · 2026 World Cup predictions"
+  },
+  "account": {
+    "signIn": "Sign in",
+    "signInGoogle": "Continue with Google",
+    "signOut": "Sign out",
+    "guest": "Guest",
+    "upgradeHint": "Sign in to keep your record and avatar"
+  },
+  "predict": {
+    "navLabel": "Predict",
+    "title": "Take on the AI",
+    "subtitle": "Predict the score, then get ranked against the AI",
+    "submit": "Submit prediction",
+    "submitting": "Submitting…",
+    "fillFirst": "Enter the score first",
+    "yourPrediction": "Your prediction",
+    "locked": "Locked — can't be changed",
+    "otherMatches": "Other upcoming matches",
+    "predicted": "Predicted",
+    "humanBoard": "Human leaderboard",
+    "you": "You",
+    "yourRank": "Your rank",
+    "rankFmt": "#{n}",
+    "ptsUnit": "pts",
+    "noUpcoming": "No matches to predict right now",
+    "verifyFailed": "Verification failed, please try again",
+    "tooLate": "This match has kicked off — too late to predict",
+    "success": "Prediction submitted!",
+    "anonError": "Sign-in failed (enable Anonymous sign-ins in Supabase)",
+    "humanEmpty": "No human predictions yet — be the first"
+  },
+  "schedule": {
+    "title": "Schedule",
+    "all": "All",
+    "upcoming": "Upcoming",
+    "finished": "Finished",
+    "group": "Group stage",
+    "knockout": "Knockout",
+    "finishedShort": "FT",
+    "live": "Live",
+    "empty": "No matches match these filters"
+  },
+  "home": {
+    "eyebrow": "AI World Cup",
+    "title": "AI World Cup Arena",
+    "leadBefore": "Leading AI models post ",
+    "leadHighlight": "public pre-match predictions",
+    "leadAfter": " for every game, ranked by real results.",
+    "hook": "Can you beat GPT?",
+    "cta": "Take on the AI",
+    "building": "Under construction · Launching before the Round of 32 on 2026/06/28",
+    "nextLabel": "Next match · AI predictions",
+    "viewFull": "View full prediction",
+    "leaderboard": "Model leaderboard",
+    "chartTitle": "Points race",
+    "comingSoon": "Updates once matches begin",
+    "noUpcoming": "No upcoming matches",
+    "ptsUnit": "pts",
+    "noSettled": "No settled matches yet — standings update after games finish",
+    "chartPoints": "Points",
+    "chartAccuracy": "Accuracy",
+    "sample": "Sample data · real data once matches begin"
+  },
+  "match": {
+    "stages": {
+      "group": "Group stage",
+      "r32": "Round of 32",
+      "r16": "Round of 16",
+      "qf": "Quarter-final",
+      "sf": "Semi-final",
+      "third": "Third place",
+      "final": "Final"
+    },
+    "groupFmt": "Group {g}",
+    "vs": "VS",
+    "finished": "Finished",
+    "scheduled": "Upcoming",
+    "sectionTitle": "Where the AI stands",
+    "tapHint": "Tap a logo for the reasoning",
+    "ctaQuestion": "Think you can out-predict these AIs?",
+    "cta": "Take on the AI",
+    "notFound": "Match not found.",
+    "noPredictions": "No model predictions for this match yet."
+  },
+  "stance": {
+    "backs": "Backing {team}",
+    "draw": "Draw / neutral",
+    "empty": "None",
+    "captionBacks": "{n} back {team}",
+    "captionDraw": "{n} predict a draw",
+    "advance": "Backed to advance",
+    "points": "{points} pts",
+    "noReason": "This model gave no reasoning.",
+    "close": "Close"
+  }
+}

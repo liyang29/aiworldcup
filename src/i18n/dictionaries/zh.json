@@ -1,0 +1,101 @@
+{
+  "nav": { "back": "返回", "home": "首页", "latest": "最新比赛", "leaderboard": "模型榜", "schedule": "赛程" },
+  "footer": {
+    "disclaimer": "纯积分娱乐，无现金 / 提现 / 博彩。",
+    "tagline": "人类 vs AI · 2026 世界杯预测"
+  },
+  "account": {
+    "signIn": "登录",
+    "signInGoogle": "用 Google 登录",
+    "signOut": "退出",
+    "guest": "访客",
+    "upgradeHint": "登录以保存战绩和头像"
+  },
+  "predict": {
+    "navLabel": "参与预测",
+    "title": "和 AI 比一把",
+    "subtitle": "预测比分，赛后与 AI 同台计分排名",
+    "submit": "提交预测",
+    "submitting": "提交中…",
+    "fillFirst": "请先填写比分",
+    "yourPrediction": "你的预测",
+    "locked": "已锁定，不可修改",
+    "otherMatches": "其它即将开赛",
+    "predicted": "已预测",
+    "humanBoard": "人类榜",
+    "you": "你",
+    "yourRank": "你的排名",
+    "rankFmt": "第 {n} 名",
+    "ptsUnit": "分",
+    "noUpcoming": "暂无可预测的比赛",
+    "verifyFailed": "人机验证未通过，请重试",
+    "tooLate": "该场已开赛，无法预测",
+    "success": "预测已提交！",
+    "anonError": "登录失败（需在 Supabase 后台开启匿名登录）",
+    "humanEmpty": "还没有人来预测，快做第一个"
+  },
+  "schedule": {
+    "title": "赛程",
+    "all": "全部",
+    "upcoming": "未开赛",
+    "finished": "已结束",
+    "group": "小组赛",
+    "knockout": "淘汰赛",
+    "finishedShort": "终",
+    "live": "进行中",
+    "empty": "没有符合条件的比赛"
+  },
+  "home": {
+    "eyebrow": "AI World Cup",
+    "title": "世界杯 AI 预测竞技场",
+    "leadBefore": "主流大模型在每场比赛",
+    "leadHighlight": "赛前公开预测",
+    "leadAfter": "，按真实结果计分排名。",
+    "hook": "你能赢过 GPT 吗？",
+    "cta": "和 AI 比一把",
+    "building": "建设中 · 2026/06/28 淘汰赛前上线",
+    "nextLabel": "下一场 · AI 预测",
+    "viewFull": "查看完整预测",
+    "leaderboard": "模型榜",
+    "chartTitle": "累计积分赛跑",
+    "comingSoon": "赛事开始后更新",
+    "noUpcoming": "暂无即将开赛的比赛",
+    "ptsUnit": "分",
+    "noSettled": "尚无已结算比赛，榜单将在比赛结束后更新",
+    "chartPoints": "累计积分",
+    "chartAccuracy": "命中率",
+    "sample": "示例数据 · 赛事开始后换真实数据"
+  },
+  "match": {
+    "stages": {
+      "group": "小组赛",
+      "r32": "32 强",
+      "r16": "16 强",
+      "qf": "八强",
+      "sf": "半决赛",
+      "third": "三四名",
+      "final": "决赛"
+    },
+    "groupFmt": "{g} 组",
+    "vs": "VS",
+    "finished": "已结束",
+    "scheduled": "未开赛",
+    "sectionTitle": "AI 怎么站队",
+    "tapHint": "点头像看理由",
+    "ctaQuestion": "你的预测会比这些 AI 更准吗？",
+    "cta": "和 AI 比一把",
+    "notFound": "没有找到这场比赛。",
+    "noPredictions": "这场比赛还没有模型预测。"
+  },
+  "stance": {
+    "backs": "看好 {team}",
+    "draw": "中立 / 平局",
+    "empty": "暂无",
+    "captionBacks": "{n} 看好 {team}",
+    "captionDraw": "{n} 平局",
+    "advance": "看好晋级",
+    "points": "{points} 分",
+    "noReason": "该模型没有给出理由。",
+    "close": "关闭"
+  }
+}

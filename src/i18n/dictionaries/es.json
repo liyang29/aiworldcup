@@ -1,0 +1,101 @@
+{
+  "nav": { "back": "Volver", "home": "Inicio", "latest": "Último partido", "leaderboard": "Clasificación", "schedule": "Calendario" },
+  "footer": {
+    "disclaimer": "Solo diversión con puntos. Sin dinero, retiros ni apuestas.",
+    "tagline": "Humanos vs IA · Predicciones del Mundial 2026"
+  },
+  "account": {
+    "signIn": "Entrar",
+    "signInGoogle": "Continuar con Google",
+    "signOut": "Salir",
+    "guest": "Invitado",
+    "upgradeHint": "Entra para guardar tu historial y avatar"
+  },
+  "predict": {
+    "navLabel": "Participar",
+    "title": "Reta a la IA",
+    "subtitle": "Predice el marcador y compite contra la IA",
+    "submit": "Enviar predicción",
+    "submitting": "Enviando…",
+    "fillFirst": "Introduce el marcador primero",
+    "yourPrediction": "Tu predicción",
+    "locked": "Bloqueada — no se puede cambiar",
+    "otherMatches": "Otros próximos partidos",
+    "predicted": "Predicho",
+    "humanBoard": "Clasificación humana",
+    "you": "Tú",
+    "yourRank": "Tu posición",
+    "rankFmt": "#{n}",
+    "ptsUnit": "pts",
+    "noUpcoming": "No hay partidos para predecir ahora",
+    "verifyFailed": "Verificación fallida, inténtalo de nuevo",
+    "tooLate": "El partido ya comenzó — demasiado tarde",
+    "success": "¡Predicción enviada!",
+    "anonError": "Error de inicio de sesión (activa el acceso anónimo en Supabase)",
+    "humanEmpty": "Aún no hay predicciones humanas — sé el primero"
+  },
+  "schedule": {
+    "title": "Calendario",
+    "all": "Todos",
+    "upcoming": "Próximos",
+    "finished": "Finalizados",
+    "group": "Fase de grupos",
+    "knockout": "Eliminatorias",
+    "finishedShort": "Fin",
+    "live": "En vivo",
+    "empty": "No hay partidos con estos filtros"
+  },
+  "home": {
+    "eyebrow": "AI World Cup",
+    "title": "Arena de Predicción IA · Mundial",
+    "leadBefore": "Los mejores modelos de IA publican ",
+    "leadHighlight": "predicciones previas al partido",
+    "leadAfter": " en cada juego, clasificados por resultados reales.",
+    "hook": "¿Puedes ganarle a GPT?",
+    "cta": "Reta a la IA",
+    "building": "En construcción · Lanzamiento antes de los dieciseisavos el 28/06/2026",
+    "nextLabel": "Próximo partido · Predicciones IA",
+    "viewFull": "Ver predicción completa",
+    "leaderboard": "Clasificación de modelos",
+    "chartTitle": "Carrera de puntos",
+    "comingSoon": "Se actualiza al comenzar los partidos",
+    "noUpcoming": "No hay próximos partidos",
+    "ptsUnit": "pts",
+    "noSettled": "Aún no hay partidos finalizados — la clasificación se actualiza después",
+    "chartPoints": "Puntos",
+    "chartAccuracy": "Acierto",
+    "sample": "Datos de ejemplo · datos reales al comenzar"
+  },
+  "match": {
+    "stages": {
+      "group": "Fase de grupos",
+      "r32": "Dieciseisavos",
+      "r16": "Octavos",
+      "qf": "Cuartos",
+      "sf": "Semifinal",
+      "third": "Tercer puesto",
+      "final": "Final"
+    },
+    "groupFmt": "Grupo {g}",
+    "vs": "VS",
+    "finished": "Finalizado",
+    "scheduled": "Próximo",
+    "sectionTitle": "Postura de las IA",
+    "tapHint": "Toca un logo para ver el motivo",
+    "ctaQuestion": "¿Crees que puedes predecir mejor que estas IA?",
+    "cta": "Reta a la IA",
+    "notFound": "Partido no encontrado.",
+    "noPredictions": "Aún no hay predicciones para este partido."
+  },
+  "stance": {
+    "backs": "Por {team}",
+    "draw": "Empate / neutral",
+    "empty": "Ninguno",
+    "captionBacks": "{n} por {team}",
+    "captionDraw": "{n} empate",
+    "advance": "Pasa de ronda",
+    "points": "{points} pts",
+    "noReason": "Este modelo no dio explicación.",
+    "close": "Cerrar"
+  }
+}
