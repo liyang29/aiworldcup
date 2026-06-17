@@ -69,6 +69,47 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
   const leaderboard = [...totals.values()].sort((a, b) => b.points - a.points);
   const anySettled = leaderboard.some((m) => m.settled);
 
+  // 折线图真实数据：按"结算比赛日"累计积分 / 命中率（数据不足时组件显示空状态）
+  const PALETTE = [
+    '#3b82f6', '#f97316', '#22c55e', '#ec4899', '#a855f7',
+    '#06b6d4', '#eab308', '#ef4444', '#14b8a6', '#8b5cf6',
+  ];
+  const { data: settledPreds } = await supabase
+    .from('model_predictions')
+    .select('points, model:model_id(name), match:match_id(kickoff_utc)')
+    .not('points', 'is', null);
+  const dateSet = new Set<string>();
+  for (const p of (settledPreds ?? []) as any[]) {
+    if (p.match?.kickoff_utc) dateSet.add(p.match.kickoff_utc.slice(0, 10));
+  }
+  const chartDates = [...dateSet].sort();
+  const chartLabels = chartDates.map((d) => {
+    const [, mo, da] = d.split('-');
+    return `${+mo}/${+da}`;
+  });
+  const byModel = new Map<string, { date: string; points: number }[]>();
+  for (const m of leaderboard) byModel.set(m.name, []);
+  for (const p of (settledPreds ?? []) as any[]) {
+    if (!p.model || !p.match?.kickoff_utc) continue;
+    byModel.get(p.model.name)?.push({ date: p.match.kickoff_utc.slice(0, 10), points: p.points ?? 0 });
+  }
+  const chartSeries = leaderboard.map((m, i) => {
+    const arr = byModel.get(m.name) ?? [];
+    let cp = 0, ch = 0, ct = 0;
+    const points: number[] = [];
+    const acc: number[] = [];
+    for (const d of chartDates) {
+      for (const x of arr.filter((x) => x.date === d)) {
+        cp += x.points;
+        ct++;
+        if (x.points > 0) ch++;
+      }
+      points.push(cp);
+      acc.push(ct ? Math.round((ch / ct) * 100) : 0);
+    }
+    return { name: m.name, color: PALETTE[i % PALETTE.length], points, acc };
+  });
+
   // 全部赛程（首页底部模块）
   const { data: allMatchesData } = await supabase
     .from('matches')
@@ -187,8 +228,10 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
             <IconChartLine size={20} /> {t.chartTitle}
           </h2>
           <ModelLineChart
-            t={{ chartPoints: t.chartPoints, chartAccuracy: t.chartAccuracy, sample: t.sample }}
-            isSample={true}
+            xLabels={chartLabels}
+            series={chartSeries}
+            emptyText={t.comingSoon}
+            t={{ chartPoints: t.chartPoints, chartAccuracy: t.chartAccuracy }}
           />
         </div>
       </section>

@@ -2,35 +2,43 @@
 
 import { useState } from 'react';
 
-export type ChartT = { chartPoints: string; chartAccuracy: string; sample: string };
-
-// 示例数据（赛事开始后由真实结算数据替换）
-const X = ['6/14', '6/15', '6/16', '6/17', '6/18', '6/19'];
-const SERIES = [
-  { name: 'DeepSeek V3.2', color: '#3b82f6', points: [3, 7, 12, 15, 20, 26], acc: [60, 55, 64, 58, 66, 68] },
-  { name: 'Grok 4.3', color: '#ff7a17', points: [5, 8, 11, 17, 22, 25], acc: [70, 62, 58, 66, 64, 67] },
-  { name: 'GPT-5.5', color: '#10a37f', points: [2, 6, 10, 14, 19, 24], acc: [50, 58, 55, 60, 63, 62] },
-  { name: 'Claude Opus 4.8', color: '#d97757', points: [4, 7, 9, 13, 17, 22], acc: [55, 52, 57, 59, 58, 60] },
-  { name: 'Qwen3.6', color: '#a855f7', points: [3, 5, 9, 12, 16, 20], acc: [48, 53, 56, 54, 57, 59] },
-  { name: 'Gemini 3.5', color: '#4285f4', points: [1, 4, 8, 11, 15, 19], acc: [45, 50, 54, 52, 56, 58] },
-];
+export type ChartT = { chartPoints: string; chartAccuracy: string };
+export type Series = { name: string; color: string; points: number[]; acc: number[] };
 
 const W = 720;
 const H = 260;
 const PAD = { l: 34, r: 12, t: 12, b: 26 };
 
-export default function ModelLineChart({ t, isSample = true }: { t: ChartT; isSample?: boolean }) {
+export default function ModelLineChart({
+  xLabels,
+  series,
+  emptyText,
+  t,
+}: {
+  xLabels: string[];
+  series: Series[];
+  emptyText: string;
+  t: ChartT;
+}) {
   const [metric, setMetric] = useState<'points' | 'acc'>('points');
 
-  const data = SERIES.map((s) => ({ ...s, vals: metric === 'points' ? s.points : s.acc }));
-  const maxY = metric === 'points' ? Math.max(...SERIES.flatMap((s) => s.points)) : 100;
-  const niceMax = metric === 'points' ? Math.ceil(maxY / 5) * 5 : 100;
+  // 数据不足（不够画"随时间变化"的曲线）→ 显示积累中空状态，不放假数据
+  if (xLabels.length < 2 || series.length === 0) {
+    return (
+      <div className="flex h-[260px] items-center justify-center rounded-card border border-dashed border-hairline bg-canvas-card px-4 text-center text-sm text-mute">
+        {emptyText}
+      </div>
+    );
+  }
+
+  const data = series.map((s) => ({ ...s, vals: metric === 'points' ? s.points : s.acc }));
+  const maxRaw = metric === 'points' ? Math.max(1, ...series.flatMap((s) => s.points)) : 100;
+  const niceMax = metric === 'points' ? Math.ceil(maxRaw / 5) * 5 || 5 : 100;
 
   const cw = W - PAD.l - PAD.r;
   const ch = H - PAD.t - PAD.b;
-  const xAt = (i: number) => PAD.l + (cw * i) / (X.length - 1);
+  const xAt = (i: number) => PAD.l + (cw * i) / Math.max(1, xLabels.length - 1);
   const yAt = (v: number) => PAD.t + ch - (ch * v) / niceMax;
-
   const yTicks = [0, 0.25, 0.5, 0.75, 1].map((f) => Math.round(niceMax * f));
 
   return (
@@ -49,7 +57,6 @@ export default function ModelLineChart({ t, isSample = true }: { t: ChartT; isSa
             </button>
           ))}
         </div>
-        {isSample && <span className="text-[11px] text-mute">{t.sample}</span>}
       </div>
 
       <div className="rounded-card border border-hairline bg-canvas-card p-3">
@@ -62,8 +69,8 @@ export default function ModelLineChart({ t, isSample = true }: { t: ChartT; isSa
               </text>
             </g>
           ))}
-          {X.map((lab, i) => (
-            <text key={lab} x={xAt(i)} y={H - 8} fill="#7d8187" fontSize="10" textAnchor="middle">
+          {xLabels.map((lab, i) => (
+            <text key={i} x={xAt(i)} y={H - 8} fill="#7d8187" fontSize="10" textAnchor="middle">
               {lab}
             </text>
           ))}
@@ -83,7 +90,7 @@ export default function ModelLineChart({ t, isSample = true }: { t: ChartT; isSa
         </svg>
 
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
-          {SERIES.map((s) => (
+          {series.map((s) => (
             <span key={s.name} className="inline-flex items-center gap-1.5 text-[11px] text-body">
               <span className="inline-block h-2 w-2 rounded-full" style={{ background: s.color }} />
               {s.name}
