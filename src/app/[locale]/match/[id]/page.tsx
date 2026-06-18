@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import StanceBoard, { type Pred } from '@/components/match/StanceBoard';
 import LocalTime from '@/components/LocalTime';
+import ShareButtons from '@/components/ShareButtons';
 import { altLinks } from '@/lib/seo';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
@@ -165,6 +166,14 @@ export default async function MatchPage({
           >
             {finished ? t.finished : t.scheduled}
           </span>
+        </div>
+
+        <div className="mt-6 border-t border-hairline pt-5">
+          <ShareButtons
+            url={`https://predworld.fun/${params.locale}/match/${match.id}`}
+            title={`${matchName} — 10 AI models predict · predworld.fun`}
+            t={{ share: t.share, copied: t.copied }}
+          />
         </div>
       </section>
 

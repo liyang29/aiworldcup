@@ -141,7 +141,9 @@
     "ctaQuestion": "¿Crees que puedes predecir mejor que estas IA?",
     "cta": "Reta a la IA",
     "notFound": "Partido no encontrado.",
-    "noPredictions": "Aún no hay predicciones para este partido."
+    "noPredictions": "Aún no hay predicciones para este partido.",
+    "share": "Compartir",
+    "copied": "¡Copiado!"
   },
   "stance": {
     "backs": "Por {team}",

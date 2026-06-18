@@ -141,7 +141,9 @@
     "ctaQuestion": "你的预测会比这些 AI 更准吗？",
     "cta": "和 AI 比一把",
     "notFound": "没有找到这场比赛。",
-    "noPredictions": "这场比赛还没有模型预测。"
+    "noPredictions": "这场比赛还没有模型预测。",
+    "share": "分享",
+    "copied": "已复制！"
   },
   "stance": {
     "backs": "看好 {team}",
