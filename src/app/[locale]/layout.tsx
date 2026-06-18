@@ -4,6 +4,7 @@ import { locales, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/dictionaries';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import { Analytics } from '@vercel/analytics/react';
 
 const OG_LOCALE: Record<Locale, string> = { en: 'en_US', zh: 'zh_CN', es: 'es_ES' };
 
@@ -61,6 +62,7 @@ export default async function LocaleLayout({
           <div className="flex-1">{children}</div>
           <SiteFooter dict={dict} locale={params.locale} />
         </div>
+        <Analytics />
       </body>
     </html>
   );
