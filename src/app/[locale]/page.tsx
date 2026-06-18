@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import StanceBoard, { type Pred } from '@/components/match/StanceBoard';
 import ScheduleList, { type SchedMatch } from '@/components/schedule/ScheduleList';
-import ModelAvatar from '@/components/ModelAvatar';
+import ModelAvatar, { logoFor } from '@/components/ModelAvatar';
 import ModelLineChart from '@/components/charts/ModelLineChart';
 import LocalTime from '@/components/LocalTime';
 import CollapsibleStance from '@/components/CollapsibleStance';
@@ -100,7 +100,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
       points.push(cp);
       acc.push(ct ? Math.round((ch / ct) * 100) : 0);
     }
-    return { name: m.name, color: PALETTE[i % PALETTE.length], points, acc };
+    return { name: m.name, color: PALETTE[i % PALETTE.length], points, acc, logo: logoFor(m.name) };
   });
 
   // 全部赛程（首页底部模块），并复用来挑首页展示的两场

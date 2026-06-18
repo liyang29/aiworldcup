@@ -3,11 +3,17 @@
 import { useState } from 'react';
 
 export type ChartT = { chartPoints: string; chartAccuracy: string };
-export type Series = { name: string; color: string; points: number[]; acc: number[] };
+export type Series = {
+  name: string;
+  color: string;
+  points: number[];
+  acc: number[];
+  logo?: string | null;
+};
 
 const W = 720;
 const H = 260;
-const PAD = { l: 34, r: 12, t: 12, b: 26 };
+const PAD = { l: 34, r: 22, t: 12, b: 26 };
 
 export default function ModelLineChart({
   xLabels,
@@ -82,11 +88,36 @@ export default function ModelLineChart({
                 stroke={s.color}
                 strokeWidth="2"
               />
-              {s.vals.map((v, i) => (
+              {/* 中间点用小圆点；末端点改用模型徽标，单独绘制 */}
+              {s.vals.slice(0, -1).map((v, i) => (
                 <circle key={i} cx={xAt(i)} cy={yAt(v)} r="2.5" fill={s.color} />
               ))}
             </g>
           ))}
+
+          {/* 每条线末端 = 该模型品牌徽标（白底圆 + logo + 线色描边），更直观 */}
+          {data.map((s) => {
+            const i = s.vals.length - 1;
+            const cx = xAt(i);
+            const cy = yAt(s.vals[i]);
+            const R = 9;
+            return (
+              <g key={`${s.name}-end`}>
+                <circle cx={cx} cy={cy} r={R} fill="#fff" stroke={s.color} strokeWidth="2" />
+                {s.logo ? (
+                  <image
+                    href={s.logo}
+                    x={cx - R * 0.62}
+                    y={cy - R * 0.62}
+                    width={R * 1.24}
+                    height={R * 1.24}
+                  />
+                ) : (
+                  <circle cx={cx} cy={cy} r={R * 0.5} fill={s.color} />
+                )}
+              </g>
+            );
+          })}
         </svg>
 
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
