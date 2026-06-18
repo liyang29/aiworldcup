@@ -10,7 +10,7 @@ import HumanBoard from '@/components/HumanBoard';
 import { fetchHumanBoard } from '@/lib/leaderboard';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
-import { altLinks } from '@/lib/seo';
+import { altLinks, ogMeta } from '@/lib/seo';
 import {
   IconTrophy,
   IconBallFootball,
@@ -26,10 +26,23 @@ export const dynamic = 'force-dynamic';
 
 const LOCALE_TAG: Record<Locale, string> = { en: 'en-US', zh: 'zh-CN', es: 'es-ES' };
 
-export function generateMetadata({ params }: { params: { locale: Locale } }): import('next').Metadata {
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: Locale };
+}): Promise<import('next').Metadata> {
+  const m = (await getDictionary(params.locale)).meta;
   return {
+    title: m.homeTitle,
+    description: m.homeDesc,
     alternates: altLinks(params.locale, ''),
-    openGraph: { url: `/${params.locale}` },
+    ...ogMeta(params.locale, {
+      siteName: m.siteName,
+      title: m.homeTitle,
+      description: m.homeDesc,
+      path: '',
+      image: `/${params.locale}/opengraph-image`,
+    }),
   };
 }
 

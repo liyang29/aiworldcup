@@ -5,7 +5,7 @@ import type { Locale } from '@/i18n/config';
 import HumanBoard from '@/components/HumanBoard';
 import ScrollToMe from '@/components/ScrollToMe';
 import { fetchHumanBoard } from '@/lib/leaderboard';
-import { altLinks } from '@/lib/seo';
+import { altLinks, ogMeta } from '@/lib/seo';
 import { IconUser } from '@tabler/icons-react';
 
 export const dynamic = 'force-dynamic';
@@ -20,8 +20,13 @@ export async function generateMetadata({
     title: m.leaderboardTitle,
     description: m.leaderboardDesc,
     alternates: altLinks(params.locale, '/leaderboard'),
-    openGraph: { title: m.leaderboardTitle, description: m.leaderboardDesc, url: `/${params.locale}/leaderboard` },
-    twitter: { title: m.leaderboardTitle, description: m.leaderboardDesc },
+    ...ogMeta(params.locale, {
+      siteName: m.siteName,
+      title: m.leaderboardTitle,
+      description: m.leaderboardDesc,
+      path: '/leaderboard',
+      image: `/${params.locale}/opengraph-image`,
+    }),
   };
 }
 

@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import StanceBoard, { type Pred } from '@/components/match/StanceBoard';
 import LocalTime from '@/components/LocalTime';
 import ShareButtons from '@/components/ShareButtons';
-import { altLinks } from '@/lib/seo';
+import { altLinks, ogMeta } from '@/lib/seo';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import {
@@ -37,8 +37,12 @@ export async function generateMetadata({
     title,
     description,
     alternates: altLinks(params.locale, `/match/${params.id}`),
-    openGraph: { title, description, url: `/${params.locale}/match/${params.id}` },
-    twitter: { title, description },
+    ...ogMeta(params.locale, {
+      siteName: dict.meta.siteName,
+      title,
+      description,
+      path: `/match/${params.id}`,
+    }),
   };
 }
 

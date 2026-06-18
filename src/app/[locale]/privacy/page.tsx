@@ -1,18 +1,26 @@
 import type { Metadata } from 'next';
 import { getDictionary } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
-import { altLinks } from '@/lib/seo';
+import { altLinks, ogMeta } from '@/lib/seo';
 
 export async function generateMetadata({
   params,
 }: {
   params: { locale: Locale };
 }): Promise<Metadata> {
-  const p = (await getDictionary(params.locale)).privacy;
+  const dict = await getDictionary(params.locale);
+  const p = dict.privacy;
   return {
     title: p.title,
     description: p.intro.slice(0, 160),
     alternates: altLinks(params.locale, '/privacy'),
+    ...ogMeta(params.locale, {
+      siteName: dict.meta.siteName,
+      title: p.title,
+      description: p.intro.slice(0, 160),
+      path: '/privacy',
+      image: `/${params.locale}/opengraph-image`,
+    }),
   };
 }
 
