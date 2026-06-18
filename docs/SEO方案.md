@@ -45,9 +45,9 @@
 
 | 项 | 谁 | 状态 |
 |---|---|---|
-| sitemap.xml（动态，全部比赛 ×3 语种 URL） | 🧑‍💻 | ⬜ |
-| robots.txt（放行爬虫 + 指向 sitemap） | 🧑‍💻 | ⬜ |
-| hreflang + canonical（en/zh/es 互为多语种，避免重复内容） | 🧑‍💻 | ⬜ |
+| sitemap.xml（动态，全部比赛 ×3 语种 URL，共321条） | 🧑‍💻 | ✅ |
+| robots.txt（放行爬虫 + 指向 sitemap） | 🧑‍💻 | ✅ |
+| hreflang + canonical（en/zh/es 互为多语种，避免重复内容） | 🧑‍💻 | 🟡 sitemap里已带hreflang；页面<head>的hreflang+canonical在第3步 |
 | 结构化数据：比赛页 SportsEvent、首页 WebSite | 🧑‍💻 | ⬜ |
 | OG / Twitter 卡片 meta（分享出大图） | 🧑‍💻 | ⬜ |
 
@@ -109,3 +109,17 @@ GA4（你给 Measurement ID）+ Cookie 同意条
 |---|---|
 | 第一批部署后 | GSC 验证域名 + 提交 sitemap；申请 AdSense |
 | 第三批 | 建 GA4 给 Measurement ID |
+
+---
+
+## 9. 第一批 · 分步执行进度（一步步来）
+
+| 步骤 | 内容 | 状态 |
+|---|---|---|
+| **第1步** | robots.txt + sitemap.xml（全站321网址×三语，sitemap内含hreflang） | ✅ 已部署 |
+| **第2步** | 三语 metadata + OG meta（首页/比赛页/排行榜/预测页，英文长尾标题） | ⬜ |
+| **第3步** | 页面 `<head>` 的 hreflang + canonical（多语种声明、防重复） | ⬜ |
+| **第4步** | 比赛页 SportsEvent 结构化数据（谷歌富结果） | ⬜ |
+| **第5步** | 隐私政策页 /privacy（AdSense 前置） | ⬜ |
+
+> 第一批全部部署后 → 👤 去 Google Search Console 验证域名、提交 `https://predworld.fun/sitemap.xml`；并开始申请 AdSense。
