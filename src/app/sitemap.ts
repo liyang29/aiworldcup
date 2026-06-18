@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { createClient } from '@supabase/supabase-js';
 import { locales } from '@/i18n/config';
 
-const BASE = 'https://predworld.fun';
+const BASE = 'https://www.predworld.fun';
 
 // 生成 /sitemap.xml：首页 / 排行榜 / 预测页 + 全部比赛页，每条都列出三语版本（hreflang alternates）。
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

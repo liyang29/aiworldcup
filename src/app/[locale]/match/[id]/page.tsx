@@ -99,8 +99,8 @@ export default async function MatchPage({
     eventStatus: 'https://schema.org/EventScheduled',
     homeTeam: { '@type': 'SportsTeam', name: home?.name ?? '?' },
     awayTeam: { '@type': 'SportsTeam', name: away?.name ?? '?' },
-    image: `https://predworld.fun/${params.locale}/opengraph-image`,
-    url: `https://predworld.fun/${params.locale}/match/${params.id}`,
+    image: `https://www.predworld.fun/${params.locale}/opengraph-image`,
+    url: `https://www.predworld.fun/${params.locale}/match/${params.id}`,
     ...(match.venue ? { location: { '@type': 'Place', name: match.venue } } : {}),
   };
 
@@ -170,7 +170,7 @@ export default async function MatchPage({
 
         <div className="mt-6 border-t border-hairline pt-5">
           <ShareButtons
-            url={`https://predworld.fun/${params.locale}/match/${match.id}`}
+            url={`https://www.predworld.fun/${params.locale}/match/${match.id}`}
             title={`${matchName} — 10 AI models predict · predworld.fun`}
             t={{ share: t.share, copied: t.copied }}
           />

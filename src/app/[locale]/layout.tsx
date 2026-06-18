@@ -16,7 +16,7 @@ export async function generateMetadata({
   const dict = await getDictionary(params.locale);
   const m = dict.meta;
   return {
-    metadataBase: new URL('https://predworld.fun'),
+    metadataBase: new URL('https://www.predworld.fun'),
     title: { default: m.homeTitle, template: `%s` },
     description: m.homeDesc,
     applicationName: m.siteName,
