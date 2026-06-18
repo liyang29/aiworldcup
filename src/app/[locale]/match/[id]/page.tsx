@@ -82,15 +82,23 @@ export default async function MatchPage({
   const groupLabel = match.group_label ? fill(t.groupFmt, { g: match.group_label }) : '';
 
   // SportsEvent 结构化数据（JSON-LD）：让谷歌识别这是一场足球赛事
+  // 注：location 需真实场馆数据；当前 API 无 venue，故暂缺（该富结果低影响，不造假）。
+  const matchName = `${home?.name ?? '?'} vs ${away?.name ?? '?'}`;
+  const endDate = new Date(
+    new Date(match.kickoff_utc).getTime() + 2 * 3600 * 1000
+  ).toISOString();
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SportsEvent',
-    name: `${home?.name ?? '?'} vs ${away?.name ?? '?'}`,
+    name: matchName,
+    description: fill(dict.meta.matchDescFmt, { home: home?.name ?? '?', away: away?.name ?? '?' }),
     sport: 'Soccer',
     startDate: match.kickoff_utc,
+    endDate,
     eventStatus: 'https://schema.org/EventScheduled',
     homeTeam: { '@type': 'SportsTeam', name: home?.name ?? '?' },
     awayTeam: { '@type': 'SportsTeam', name: away?.name ?? '?' },
+    image: `https://predworld.fun/${params.locale}/opengraph-image`,
     url: `https://predworld.fun/${params.locale}/match/${params.id}`,
     ...(match.venue ? { location: { '@type': 'Place', name: match.venue } } : {}),
   };
