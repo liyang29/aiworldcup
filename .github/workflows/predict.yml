@@ -6,7 +6,7 @@ on:
     inputs:
       within:
         description: '只预测未来 N 小时内开赛的比赛'
-        default: '4'
+        default: '24'
 concurrency:
   group: predict
   cancel-in-progress: false
@@ -25,4 +25,4 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: node scripts/predict/index.mjs --within=${{ github.event.inputs.within || '4' }}
+        run: node scripts/predict/index.mjs --within=${{ github.event.inputs.within || '24' }}
