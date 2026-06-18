@@ -209,12 +209,14 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
                 <TeamMini name={upcoming.away?.name} flag={upcoming.away?.flag_url} />
               </a>
 
-              <a
-                href={`/${locale}/predict?match=${upcoming.id}`}
-                className="mt-4 flex items-center justify-center gap-2 rounded-card bg-sunset px-4 py-3 text-sm font-medium text-canvas transition-opacity hover:opacity-90"
-              >
-                {t.predictThis} <IconArrowRight size={16} />
-              </a>
+              <div className="mt-4 flex justify-center">
+                <a
+                  href={`/${locale}/predict?match=${upcoming.id}`}
+                  className="inline-flex items-center gap-2 rounded-full bg-sunset px-8 py-2.5 text-sm font-medium text-canvas transition-opacity hover:opacity-90"
+                >
+                  {t.predictThis} <IconArrowRight size={16} />
+                </a>
+              </div>
 
               <CollapsibleStance
                 predictions={upcomingPreds}
