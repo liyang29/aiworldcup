@@ -84,6 +84,7 @@
     "noUpcoming": "No upcoming matches",
     "ptsUnit": "pts",
     "noSettled": "No settled matches yet — standings update after games finish",
+    "since": "AI predictions since Jun 16, 2026 — earlier matches predate the system.",
     "chartPoints": "Points",
     "chartAccuracy": "Accuracy",
     "sample": "Sample data · real data once matches begin"

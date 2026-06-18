@@ -84,6 +84,7 @@
     "noUpcoming": "暂无即将开赛的比赛",
     "ptsUnit": "分",
     "noSettled": "尚无已结算比赛，榜单将在比赛结束后更新",
+    "since": "AI 预测自 2026/6/16 起 — 更早的比赛在系统上线之前。",
     "chartPoints": "累计积分",
     "chartAccuracy": "命中率",
     "sample": "示例数据 · 赛事开始后换真实数据"

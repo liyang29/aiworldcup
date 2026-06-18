@@ -320,6 +320,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
               <p className="px-3 py-2 text-center text-xs text-mute">{t.noSettled}</p>
             )}
           </div>
+          <p className="mt-2 px-1 text-xs text-mute">{t.since}</p>
         </div>
 
         <div>
