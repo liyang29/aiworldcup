@@ -19,6 +19,7 @@ export async function generateMetadata({
     title: { default: m.homeTitle, template: `%s` },
     description: m.homeDesc,
     applicationName: m.siteName,
+    verification: { google: '06dxOsjCYdCkgSiaxqREMdzXdFn_HgLWGkATYKVt77s' },
     openGraph: {
       type: 'website',
       siteName: m.siteName,
