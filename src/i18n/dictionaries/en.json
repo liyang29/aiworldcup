@@ -11,6 +11,25 @@
     "matchTitleFmt": "{home} vs {away}: 10 AI Models Predict the Score | World Cup 2026",
     "matchDescFmt": "See how GPT, Claude, Gemini, Grok, DeepSeek and more AI models predict {home} vs {away} — locked before kickoff, scored against the real result."
   },
+  "privacy": {
+    "title": "Privacy Policy",
+    "updatedLabel": "Last updated",
+    "updated": "June 18, 2026",
+    "intro": "This Privacy Policy explains how AI World Cup Arena (predworld.fun) collects, uses, and shares information when you use our website. By using the site, you agree to this policy.",
+    "contactEmail": "snailly1988@gmail.com",
+    "sections": [
+      { "h": "Information we collect", "p": ["Account data: when you sign in anonymously or with Google through our authentication provider, we store a user identifier and, for Google sign-in, your display name and avatar.", "Predictions you submit, and the scores and ranking they produce.", "Basic technical data such as approximate region, device, browser, and pages visited, collected automatically via cookies and analytics."] },
+      { "h": "Cookies and similar technologies", "p": ["We and our partners use cookies and similar technologies to keep you signed in, prevent abuse, measure traffic, and where applicable show ads. You can control cookies through your browser settings."] },
+      { "h": "Third-party services", "p": ["Supabase — authentication and database hosting.", "Cloudflare Turnstile — bot protection on forms.", "Google AdSense — advertising (see Advertising below).", "Google Analytics — traffic measurement, if enabled.", "These providers process data under their own privacy policies."] },
+      { "h": "Advertising", "p": ["We may display ads served by Google AdSense. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this and other websites.", "You can opt out of personalized advertising via Google Ads Settings (adssettings.google.com), or opt out of third-party vendors' cookies at www.aboutads.info."] },
+      { "h": "How we use information", "p": ["To run the prediction game, compute scores and rankings, prevent abuse, understand and improve the site, and display advertising."] },
+      { "h": "Your rights and choices", "p": ["Depending on your location (including the EU/EEA and UK under GDPR), you may have the right to access, correct, or delete your data, and to object to certain processing.", "To request deletion of your account and data, contact us at the email below."] },
+      { "h": "Children's privacy", "p": ["The site is not directed to children under 13 (or the minimum age in your jurisdiction), and we do not knowingly collect their data."] },
+      { "h": "Data retention and security", "p": ["We keep data only as long as needed to operate the service and use reasonable measures to protect it. No method of transmission or storage is completely secure."] },
+      { "h": "Changes to this policy", "p": ["We may update this policy; material changes are reflected by the Last updated date above."] },
+      { "h": "Contact", "p": ["Questions about this policy? Email us at the address below."] }
+    ]
+  },
   "rules": {
     "title": "Scoring rules",
     "subtitle": "Models and you are scored exactly the same way, on the 90-minute result.",
@@ -28,7 +47,8 @@
   },
   "footer": {
     "disclaimer": "Points-only entertainment. No cash, withdrawals, or betting.",
-    "tagline": "Humans vs AI · 2026 World Cup predictions"
+    "tagline": "Humans vs AI · 2026 World Cup predictions",
+    "privacy": "Privacy Policy"
   },
   "account": {
     "signIn": "Sign in",

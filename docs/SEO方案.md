@@ -66,7 +66,7 @@
 
 | 项 | 谁 | 状态 |
 |---|---|---|
-| 隐私政策页 | 🧑‍💻 | ⬜ |
+| 隐私政策页 | 🧑‍💻 | ✅ /privacy 三语，页脚已挂链接（含 AdSense/cookie/GDPR/删除/联系） |
 | 申请 AdSense（用隐私页+现有内容，有审核提前量，越早越好） | 👤 | ⬜ |
 | Cookie 同意条（欧盟合规，与 GA4 一起上） | 🧑‍💻 | ⬜ |
 
@@ -121,6 +121,8 @@ GA4（你给 Measurement ID）+ Cookie 同意条
 | **第3步** | 页面 `<head>` 的 hreflang + canonical（多语种声明、防重复） | ✅ 已部署 |
 | **第4步** | 比赛页 SportsEvent 结构化数据（谷歌富结果） | ✅ 已部署（含 name/sport/startDate/endDate/homeTeam/awayTeam/description/image/url）|
 | ↳ 待办 | SportsEvent 的 `location`（场馆）——104场全无 venue 数据，免费 API 不提供；该富结果低影响，暂不造假，待有真实场馆源再同步 | ⬜ 低优先 |
-| **第5步** | 隐私政策页 /privacy（AdSense 前置） | ⬜ |
+| **第5步** | 隐私政策页 /privacy（AdSense 前置） | ✅ 已部署 |
+
+> 🎉 第一批 SEO 全部完成。👉 你现在可以：① GSC 验证域名 + 提交 sitemap；② 申请 AdSense（隐私页已就绪）。
 
 > 第一批全部部署后 → 👤 去 Google Search Console 验证域名、提交 `https://predworld.fun/sitemap.xml`；并开始申请 AdSense。
