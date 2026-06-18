@@ -3,6 +3,7 @@ import StanceBoard, { type Pred } from '@/components/match/StanceBoard';
 import ScheduleList, { type SchedMatch } from '@/components/schedule/ScheduleList';
 import ModelAvatar from '@/components/ModelAvatar';
 import ModelLineChart from '@/components/charts/ModelLineChart';
+import LocalTime from '@/components/LocalTime';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import {
@@ -24,27 +25,13 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
   const t = dict.home;
   const supabase = createClient();
 
-  // 最近一场未开赛比赛
-  const { data: nextData } = await supabase
-    .from('matches')
-    .select(
-      'id, stage, group_label, kickoff_utc, ' +
-        'home:home_team_id(name, flag_url), away:away_team_id(name, flag_url)'
-    )
-    .eq('status', 'scheduled')
-    .gt('kickoff_utc', new Date().toISOString())
-    .order('kickoff_utc', { ascending: true })
-    .limit(1)
-    .maybeSingle();
-  const next = nextData as any;
-
-  let predictions: Pred[] = [];
-  if (next) {
-    const { data } = await supabase
-      .from('model_predictions')
-      .select('pred_home, pred_away, reasoning, points, pred_advance_team_id, model:model_id(name, provider)')
-      .eq('match_id', next.id);
-    predictions = (data ?? []) as unknown as Pred[];
+  // 每场被预测了几个模型（首页只展示"有 AI 预测"的比赛，避免顶上空比赛）
+  const { data: predMatchRows } = await supabase
+    .from('model_predictions')
+    .select('match_id');
+  const predCount = new Map<string, number>();
+  for (const r of (predMatchRows ?? []) as any[]) {
+    predCount.set(r.match_id, (predCount.get(r.match_id) ?? 0) + 1);
   }
 
   // 模型榜（累计积分）
@@ -110,27 +97,39 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
     return { name: m.name, color: PALETTE[i % PALETTE.length], points, acc };
   });
 
-  // 全部赛程（首页底部模块）
+  // 全部赛程（首页底部模块），并复用来挑首页展示的两场
   const { data: allMatchesData } = await supabase
     .from('matches')
     .select(
-      'id, stage, kickoff_utc, status, home_score, away_score, ' +
+      'id, stage, group_label, kickoff_utc, status, home_score, away_score, ' +
         'home:home_team_id(name, flag_url), away:away_team_id(name, flag_url)'
     )
     .order('kickoff_utc', { ascending: true });
   const allMatches = (allMatchesData ?? []) as unknown as SchedMatch[];
 
-  const stageLabel = next ? (dict.match.stages as Record<string, string>)[next.stage] ?? next.stage : '';
-  const groupLabel = next?.group_label ? fill(dict.match.groupFmt, { g: next.group_label }) : '';
-  const kickoff = next
-    ? new Date(next.kickoff_utc).toLocaleString(LOCALE_TAG[locale], {
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      })
-    : '';
+  // 首页固定展示「一前一后」两场——都必须有 AI 预测：
+  //   upcoming = 有预测的下一场即将开赛（紧凑卡，赛前邀请用户预测）
+  //   recent   = 有预测的最近一场进行中/刚结束（完整站队板 + 真实比分）
+  const nowMs = Date.now();
+  const predicted = allMatches.filter((m) => predCount.has(m.id)) as any[];
+  const upcoming = predicted.find((m) => new Date(m.kickoff_utc).getTime() > nowMs) ?? null;
+  const pastPredicted = predicted.filter((m) => new Date(m.kickoff_utc).getTime() <= nowMs);
+  const recent = pastPredicted.length ? pastPredicted[pastPredicted.length - 1] : null;
+
+  let recentPreds: Pred[] = [];
+  if (recent) {
+    const { data } = await supabase
+      .from('model_predictions')
+      .select('pred_home, pred_away, reasoning, points, pred_advance_team_id, model:model_id(name, provider)')
+      .eq('match_id', recent.id);
+    recentPreds = (data ?? []) as unknown as Pred[];
+  }
+
+  const matchLabel = (m: any) => {
+    const s = (dict.match.stages as Record<string, string>)[m.stage] ?? m.stage;
+    const g = m.group_label ? fill(dict.match.groupFmt, { g: m.group_label }) : '';
+    return g ? `${s} · ${g}` : s;
+  };
 
   return (
     <main className="mx-auto max-w-[1440px] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
@@ -150,47 +149,126 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
         <p className="mt-3 text-xl font-medium text-sunset">{t.hook}</p>
       </header>
 
-      {/* 下一场 · AI 预测（完整站队板） */}
-      {next && (
-        <section id="next" className="mt-12 scroll-mt-20">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="inline-flex items-center gap-2 text-xl font-medium text-ink">
-              <IconBallFootball size={20} /> {t.nextLabel}
-            </h2>
-            <a
-              href={`/${locale}/match/${next.id}`}
-              className="inline-flex items-center gap-1 text-sm text-mute hover:text-body"
-            >
-              {t.viewFull} <IconArrowRight size={15} />
-            </a>
-          </div>
+      {/* 一前一后：即将开赛（紧凑卡） + 最近进行中/刚结束（完整站队板+真实比分） */}
+      {(upcoming || recent) && (
+        <section id="next" className="mt-12 scroll-mt-20 space-y-10">
+          {/* 即将开赛 → 紧凑卡 */}
+          {upcoming && (
+            <div>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="inline-flex items-center gap-2 text-xl font-medium text-ink">
+                  <IconBallFootball size={20} /> {t.upcomingLabel}
+                </h2>
+                <a
+                  href={`/${locale}/match/${upcoming.id}`}
+                  className="inline-flex items-center gap-1 text-sm text-mute hover:text-body"
+                >
+                  {t.viewFull} <IconArrowRight size={15} />
+                </a>
+              </div>
 
-          <a
-            href={`/${locale}/match/${next.id}`}
-            className="mb-4 flex items-center justify-center gap-6 rounded-card border border-hairline bg-canvas-card p-5 transition-colors hover:border-mute"
-          >
-            <TeamMini name={next.home?.name} flag={next.home?.flag_url} />
-            <div className="flex flex-col items-center">
-              <span className="text-2xl font-medium text-mute">{dict.match.vs}</span>
-              <span className="mt-1 inline-flex items-center gap-1 text-xs text-mute">
-                <IconClock size={12} /> {kickoff}
-              </span>
-              <span className="mt-1 font-mono text-[11px] uppercase tracking-wider text-mute">
-                {stageLabel}
-                {groupLabel ? ` · ${groupLabel}` : ''}
-              </span>
+              <a
+                href={`/${locale}/match/${upcoming.id}`}
+                className="flex items-center justify-center gap-6 rounded-card border border-hairline bg-canvas-card p-5 transition-colors hover:border-mute"
+              >
+                <TeamMini name={upcoming.home?.name} flag={upcoming.home?.flag_url} />
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl font-medium text-mute">{dict.match.vs}</span>
+                  <span className="mt-1 inline-flex items-center gap-1 text-xs text-mute">
+                    <IconClock size={12} />{' '}
+                    <LocalTime
+                      utc={upcoming.kickoff_utc}
+                      localeTag={LOCALE_TAG[locale]}
+                      options={{
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,
+                        timeZoneName: 'short',
+                      }}
+                    />
+                  </span>
+                  <span className="mt-1 font-mono text-[11px] uppercase tracking-wider text-mute">
+                    {matchLabel(upcoming)}
+                  </span>
+                  <span className="mt-1.5 rounded-full bg-sunset/15 px-2.5 py-0.5 text-[11px] text-sunset">
+                    {fill(t.predsCountFmt, { n: String(predCount.get(upcoming.id) ?? 0) })}
+                  </span>
+                </div>
+                <TeamMini name={upcoming.away?.name} flag={upcoming.away?.flag_url} />
+              </a>
             </div>
-            <TeamMini name={next.away?.name} flag={next.away?.flag_url} />
-          </a>
+          )}
 
-          {predictions.length > 0 && (
-            <StanceBoard
-              predictions={predictions}
-              homeName={next.home?.name ?? '?'}
-              awayName={next.away?.name ?? '?'}
-              isKnockout={next.stage !== 'group'}
-              t={dict.stance}
-            />
+          {/* 最近进行中/刚结束 → 真实比分 + 完整站队板 */}
+          {recent && (
+            <div>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="inline-flex items-center gap-2 text-xl font-medium text-ink">
+                  <IconBallFootball size={20} /> {t.recentLabel}
+                </h2>
+                <a
+                  href={`/${locale}/match/${recent.id}`}
+                  className="inline-flex items-center gap-1 text-sm text-mute hover:text-body"
+                >
+                  {t.viewFull} <IconArrowRight size={15} />
+                </a>
+              </div>
+
+              <a
+                href={`/${locale}/match/${recent.id}`}
+                className="mb-4 flex items-center justify-center gap-6 rounded-card border border-hairline bg-canvas-card p-5 transition-colors hover:border-mute"
+              >
+                <TeamMini name={recent.home?.name} flag={recent.home?.flag_url} />
+                <div className="flex flex-col items-center">
+                  {recent.home_score != null ? (
+                    <span className="text-3xl font-medium text-ink">
+                      {recent.home_score}
+                      <span className="px-2 text-mute">-</span>
+                      {recent.away_score}
+                    </span>
+                  ) : (
+                    <span className="text-2xl font-medium text-mute">{dict.match.vs}</span>
+                  )}
+                  <span className="mt-1 inline-flex items-center gap-1 text-xs text-mute">
+                    <IconClock size={12} />{' '}
+                    <LocalTime
+                      utc={recent.kickoff_utc}
+                      localeTag={LOCALE_TAG[locale]}
+                      options={{
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,
+                        timeZoneName: 'short',
+                      }}
+                    />
+                  </span>
+                  <span className="mt-1 font-mono text-[11px] uppercase tracking-wider text-mute">
+                    {matchLabel(recent)}
+                  </span>
+                  {recent.status === 'live' && (
+                    <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-red-500/15 px-2.5 py-0.5 text-[11px] font-medium text-red-400">
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-400" />
+                      {t.liveLabel}
+                    </span>
+                  )}
+                </div>
+                <TeamMini name={recent.away?.name} flag={recent.away?.flag_url} />
+              </a>
+
+              {recentPreds.length > 0 && (
+                <StanceBoard
+                  predictions={recentPreds}
+                  homeName={recent.home?.name ?? '?'}
+                  awayName={recent.away?.name ?? '?'}
+                  isKnockout={recent.stage !== 'group'}
+                  t={dict.stance}
+                />
+              )}
+            </div>
           )}
         </section>
       )}

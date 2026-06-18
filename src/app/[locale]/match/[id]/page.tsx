@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import StanceBoard, { type Pred } from '@/components/match/StanceBoard';
+import LocalTime from '@/components/LocalTime';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import {
@@ -50,14 +51,6 @@ export default async function MatchPage({
   const finished = match.status === 'finished';
   const isKnockout = match.stage !== 'group';
 
-  const kickoff = new Date(match.kickoff_utc).toLocaleString(LOCALE_TAG[params.locale], {
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
-
   const stageLabel = (t.stages as Record<string, string>)[match.stage] ?? match.stage;
   const groupLabel = match.group_label ? fill(t.groupFmt, { g: match.group_label }) : '';
 
@@ -93,7 +86,19 @@ export default async function MatchPage({
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-mute">
           <span className="inline-flex items-center gap-1.5">
-            <IconClock size={15} /> {kickoff}
+            <IconClock size={15} />{' '}
+            <LocalTime
+              utc={match.kickoff_utc}
+              localeTag={LOCALE_TAG[params.locale]}
+              options={{
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+                timeZoneName: 'short',
+              }}
+            />
           </span>
           {match.venue && (
             <span className="inline-flex items-center gap-1.5">
