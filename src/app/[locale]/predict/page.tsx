@@ -4,6 +4,7 @@ import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import PredictForm from '@/components/predict/PredictForm';
 import ScoringRules from '@/components/ScoringRules';
+import LocalTime from '@/components/LocalTime';
 import { IconBallFootball, IconClock, IconCheck, IconUser, IconScale } from '@tabler/icons-react';
 
 export const dynamic = 'force-dynamic';
@@ -86,14 +87,15 @@ export default async function PredictPage({
 
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
-  const fmtKick = (iso: string) =>
-    new Date(iso).toLocaleString(LOCALE_TAG[locale], {
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    });
+  // 时间统一在客户端按访客本地时区显示（附时区缩写），与首页/比赛页一致
+  const timeOpts: Intl.DateTimeFormatOptions = {
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZoneName: 'short',
+  };
 
   return (
     <main className="mx-auto max-w-[1440px] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
@@ -111,7 +113,8 @@ export default async function PredictPage({
             <div className="flex flex-col items-center">
               <span className="text-lg font-medium text-mute">VS</span>
               <span className="mt-1 inline-flex items-center gap-1 text-[11px] text-mute">
-                <IconClock size={11} /> {fmtKick(selected.kickoff_utc)}
+                <IconClock size={11} />{' '}
+                <LocalTime utc={selected.kickoff_utc} localeTag={LOCALE_TAG[locale]} options={timeOpts} />
               </span>
             </div>
             <Team name={selected.away?.name} flag={selected.away?.flag_url} />
@@ -177,7 +180,9 @@ export default async function PredictPage({
                     <IconCheck size={13} /> {t.predicted}
                   </span>
                 ) : (
-                  <span className="text-[11px] text-mute">{fmtKick(m.kickoff_utc)}</span>
+                  <span className="text-[11px] text-mute">
+                    <LocalTime utc={m.kickoff_utc} localeTag={LOCALE_TAG[locale]} options={timeOpts} />
+                  </span>
                 )}
               </Link>
             ))}
