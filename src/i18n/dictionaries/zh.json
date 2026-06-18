@@ -60,6 +60,8 @@
     "predsCountFmt": "{n} 个模型已预测",
     "liveLabel": "进行中",
     "viewFull": "查看完整预测",
+    "expand": "完整预测",
+    "collapse": "收起",
     "leaderboard": "模型榜",
     "chartTitle": "累计积分赛跑",
     "comingSoon": "赛事开始后更新",

@@ -60,6 +60,8 @@
     "predsCountFmt": "{n} predicciones IA",
     "liveLabel": "EN VIVO",
     "viewFull": "Ver predicción completa",
+    "expand": "Predicciones completas",
+    "collapse": "Ocultar",
     "leaderboard": "Clasificación de modelos",
     "chartTitle": "Carrera de puntos",
     "comingSoon": "Se actualiza al comenzar los partidos",

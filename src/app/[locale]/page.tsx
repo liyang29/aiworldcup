@@ -4,6 +4,7 @@ import ScheduleList, { type SchedMatch } from '@/components/schedule/ScheduleLis
 import ModelAvatar from '@/components/ModelAvatar';
 import ModelLineChart from '@/components/charts/ModelLineChart';
 import LocalTime from '@/components/LocalTime';
+import CollapsibleStance from '@/components/CollapsibleStance';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import {
@@ -11,7 +12,6 @@ import {
   IconBallFootball,
   IconChartLine,
   IconClock,
-  IconArrowRight,
   IconCalendar,
 } from '@tabler/icons-react';
 
@@ -125,6 +125,15 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
     recentPreds = (data ?? []) as unknown as Pred[];
   }
 
+  let upcomingPreds: Pred[] = [];
+  if (upcoming) {
+    const { data } = await supabase
+      .from('model_predictions')
+      .select('pred_home, pred_away, reasoning, points, pred_advance_team_id, model:model_id(name, provider)')
+      .eq('match_id', upcoming.id);
+    upcomingPreds = (data ?? []) as unknown as Pred[];
+  }
+
   const matchLabel = (m: any) => {
     const s = (dict.match.stages as Record<string, string>)[m.stage] ?? m.stage;
     const g = m.group_label ? fill(dict.match.groupFmt, { g: m.group_label }) : '';
@@ -152,20 +161,12 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
       {/* 一前一后：即将开赛（紧凑卡） + 最近进行中/刚结束（完整站队板+真实比分） */}
       {(upcoming || recent) && (
         <section id="next" className="mt-12 scroll-mt-20 space-y-10">
-          {/* 即将开赛 → 紧凑卡 */}
+          {/* 即将开赛 → 紧凑卡 + 「完整预测」下拉展开站队板 */}
           {upcoming && (
             <div>
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="inline-flex items-center gap-2 text-xl font-medium text-ink">
-                  <IconBallFootball size={20} /> {t.upcomingLabel}
-                </h2>
-                <a
-                  href={`/${locale}/match/${upcoming.id}`}
-                  className="inline-flex items-center gap-1 text-sm text-mute hover:text-body"
-                >
-                  {t.viewFull} <IconArrowRight size={15} />
-                </a>
-              </div>
+              <h2 className="mb-4 inline-flex items-center gap-2 text-xl font-medium text-ink">
+                <IconBallFootball size={20} /> {t.upcomingLabel}
+              </h2>
 
               <a
                 href={`/${locale}/match/${upcoming.id}`}
@@ -198,23 +199,25 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
                 </div>
                 <TeamMini name={upcoming.away?.name} flag={upcoming.away?.flag_url} />
               </a>
+
+              <CollapsibleStance
+                predictions={upcomingPreds}
+                homeName={upcoming.home?.name ?? '?'}
+                awayName={upcoming.away?.name ?? '?'}
+                isKnockout={upcoming.stage !== 'group'}
+                t={dict.stance}
+                expandLabel={t.expand}
+                collapseLabel={t.collapse}
+              />
             </div>
           )}
 
           {/* 最近进行中/刚结束 → 真实比分 + 完整站队板 */}
           {recent && (
             <div>
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="inline-flex items-center gap-2 text-xl font-medium text-ink">
-                  <IconBallFootball size={20} /> {t.recentLabel}
-                </h2>
-                <a
-                  href={`/${locale}/match/${recent.id}`}
-                  className="inline-flex items-center gap-1 text-sm text-mute hover:text-body"
-                >
-                  {t.viewFull} <IconArrowRight size={15} />
-                </a>
-              </div>
+              <h2 className="mb-4 inline-flex items-center gap-2 text-xl font-medium text-ink">
+                <IconBallFootball size={20} /> {t.recentLabel}
+              </h2>
 
               <a
                 href={`/${locale}/match/${recent.id}`}

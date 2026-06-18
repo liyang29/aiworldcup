@@ -60,6 +60,8 @@
     "predsCountFmt": "{n} AI predictions",
     "liveLabel": "LIVE",
     "viewFull": "View full prediction",
+    "expand": "Full predictions",
+    "collapse": "Collapse",
     "leaderboard": "Model leaderboard",
     "chartTitle": "Points race",
     "comingSoon": "Updates once matches begin",
