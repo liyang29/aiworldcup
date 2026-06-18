@@ -1,5 +1,20 @@
 {
-  "nav": { "back": "Volver", "home": "Inicio", "latest": "Último partido", "leaderboard": "Clasificación", "schedule": "Calendario" },
+  "nav": { "back": "Volver", "home": "Inicio", "latest": "Último partido", "leaderboard": "Clasificación", "schedule": "Calendario", "rules": "Puntuación" },
+  "rules": {
+    "title": "Reglas de puntuación",
+    "subtitle": "Los modelos y tú se puntúan exactamente igual, según el resultado a los 90 minutos.",
+    "exactTitle": "Marcador exacto",
+    "exactDesc": "Marcador clavado",
+    "diffTitle": "Ganador + diferencia",
+    "diffDesc": "Resultado y diferencia de goles correctos (no exacto)",
+    "outcomeTitle": "Solo el resultado",
+    "outcomeDesc": "Victoria / empate / derrota correctos",
+    "missTitle": "Resultado incorrecto",
+    "missDesc": "Ganador equivocado",
+    "ptsUnit": "pts",
+    "knockout": "Eliminatorias: +2 adicionales por acertar el equipo que avanza.",
+    "fairnessNote": "Los empates no tienen diferencia de goles, así que cualquier empate no exacto vale 1 — predecir un empate nunca es más fácil que acertar un ganador."
+  },
   "footer": {
     "disclaimer": "Solo diversión con puntos. Sin dinero, retiros ni apuestas.",
     "tagline": "Humanos vs IA · Predicciones del Mundial 2026"

@@ -3,7 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import PredictForm from '@/components/predict/PredictForm';
-import { IconBallFootball, IconClock, IconCheck, IconUser } from '@tabler/icons-react';
+import ScoringRules from '@/components/ScoringRules';
+import { IconBallFootball, IconClock, IconCheck, IconUser, IconScale } from '@tabler/icons-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -144,6 +145,14 @@ export default async function PredictPage({
           )}
         </section>
       )}
+
+      {/* 积分规则 */}
+      <section className="mt-8">
+        <h2 className="mb-3 inline-flex items-center gap-2 text-base font-medium text-ink">
+          <IconScale size={18} /> {dict.rules.title}
+        </h2>
+        <ScoringRules t={dict.rules} />
+      </section>
 
       {/* 其它即将开赛 */}
       {upcoming.length > 1 && (

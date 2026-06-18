@@ -1,5 +1,20 @@
 {
-  "nav": { "back": "返回", "home": "首页", "latest": "最新比赛", "leaderboard": "模型榜", "schedule": "赛程" },
+  "nav": { "back": "返回", "home": "首页", "latest": "最新比赛", "leaderboard": "模型榜", "schedule": "赛程", "rules": "积分规则" },
+  "rules": {
+    "title": "积分规则",
+    "subtitle": "模型和你，计分规则完全一样，都按 90 分钟比分判定。",
+    "exactTitle": "精确比分",
+    "exactDesc": "比分完全猜对",
+    "diffTitle": "胜负 + 净胜球",
+    "diffDesc": "走势对、净胜球也对（非精确）",
+    "outcomeTitle": "仅走势对",
+    "outcomeDesc": "猜对胜 / 平 / 负",
+    "missTitle": "走势错",
+    "missDesc": "胜负方向猜错",
+    "ptsUnit": "分",
+    "knockout": "淘汰赛：另外猜对晋级球队，再 +2 分。",
+    "fairnessNote": "平局没有净胜球差，所以任何非精确平局只给 1 分——猜平绝不会比猜某队赢更容易得分。"
+  },
   "footer": {
     "disclaimer": "纯积分娱乐，无现金 / 提现 / 博彩。",
     "tagline": "人类 vs AI · 2026 世界杯预测"

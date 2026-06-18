@@ -48,6 +48,9 @@ export default async function SiteHeader({ locale, dict }: { locale: Locale; dic
             <Link href={`${base}#leaderboard`} className="hover:text-ink">
               {nav.leaderboard}
             </Link>
+            <Link href={`${base}#rules`} className="hover:text-ink">
+              {nav.rules}
+            </Link>
             <Link href={`${base}#schedule`} className="hover:text-ink">
               {nav.schedule}
             </Link>

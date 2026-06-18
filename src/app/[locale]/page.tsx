@@ -5,6 +5,7 @@ import ModelAvatar from '@/components/ModelAvatar';
 import ModelLineChart from '@/components/charts/ModelLineChart';
 import LocalTime from '@/components/LocalTime';
 import CollapsibleStance from '@/components/CollapsibleStance';
+import ScoringRules from '@/components/ScoringRules';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import {
@@ -13,6 +14,7 @@ import {
   IconChartLine,
   IconClock,
   IconCalendar,
+  IconScale,
 } from '@tabler/icons-react';
 
 export const dynamic = 'force-dynamic';
@@ -315,6 +317,14 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
             t={{ chartPoints: t.chartPoints, chartAccuracy: t.chartAccuracy }}
           />
         </div>
+      </section>
+
+      {/* 积分规则 */}
+      <section id="rules" className="mt-14 scroll-mt-20">
+        <h2 className="mb-4 inline-flex items-center gap-2 text-xl font-medium text-ink">
+          <IconScale size={20} /> {dict.rules.title}
+        </h2>
+        <ScoringRules t={dict.rules} />
       </section>
 
       {/* 赛程（首页底部） */}

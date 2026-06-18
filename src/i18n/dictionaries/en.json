@@ -1,5 +1,20 @@
 {
-  "nav": { "back": "Back", "home": "Home", "latest": "Latest match", "leaderboard": "Leaderboard", "schedule": "Schedule" },
+  "nav": { "back": "Back", "home": "Home", "latest": "Latest match", "leaderboard": "Leaderboard", "schedule": "Schedule", "rules": "Scoring" },
+  "rules": {
+    "title": "Scoring rules",
+    "subtitle": "Models and you are scored exactly the same way, on the 90-minute result.",
+    "exactTitle": "Exact score",
+    "exactDesc": "Scoreline spot-on",
+    "diffTitle": "Winner + margin",
+    "diffDesc": "Right result and goal margin (not exact)",
+    "outcomeTitle": "Right result",
+    "outcomeDesc": "Win / draw / loss correct",
+    "missTitle": "Wrong result",
+    "missDesc": "Winner called wrong",
+    "ptsUnit": "pts",
+    "knockout": "Knockouts: +2 more for correctly calling the team that advances.",
+    "fairnessNote": "Draws have no goal margin, so any non-exact draw scores 1 — predicting a draw is never easier than calling a winner."
+  },
   "footer": {
     "disclaimer": "Points-only entertainment. No cash, withdrawals, or betting.",
     "tagline": "Humans vs AI · 2026 World Cup predictions"
