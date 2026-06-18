@@ -15,6 +15,7 @@ import {
   IconClock,
   IconCalendar,
   IconScale,
+  IconArrowRight,
 } from '@tabler/icons-react';
 
 export const dynamic = 'force-dynamic';
@@ -158,6 +159,12 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
           {t.leadAfter}
         </p>
         <p className="mt-3 text-xl font-medium text-sunset">{t.hook}</p>
+        <a
+          href={`/${locale}/predict`}
+          className="mt-5 inline-flex items-center gap-2 rounded-full bg-sunset px-7 py-3 text-sm font-medium text-canvas transition-opacity hover:opacity-90"
+        >
+          {t.cta} <IconArrowRight size={16} />
+        </a>
       </header>
 
       {/* 一前一后：即将开赛（紧凑卡） + 最近进行中/刚结束（完整站队板+真实比分） */}
@@ -200,6 +207,13 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
                   </span>
                 </div>
                 <TeamMini name={upcoming.away?.name} flag={upcoming.away?.flag_url} />
+              </a>
+
+              <a
+                href={`/${locale}/predict?match=${upcoming.id}`}
+                className="mt-4 flex items-center justify-center gap-2 rounded-card bg-sunset px-4 py-3 text-sm font-medium text-canvas transition-opacity hover:opacity-90"
+              >
+                {t.predictThis} <IconArrowRight size={16} />
               </a>
 
               <CollapsibleStance
