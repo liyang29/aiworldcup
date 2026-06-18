@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
-import { getDictionary, fill } from '@/i18n/dictionaries';
+import { getDictionary } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import PredictForm from '@/components/predict/PredictForm';
 import ScoringRules from '@/components/ScoringRules';
 import LocalTime from '@/components/LocalTime';
+import HumanBoard from '@/components/HumanBoard';
+import { fetchHumanBoard } from '@/lib/leaderboard';
 import { IconBallFootball, IconClock, IconCheck, IconUser, IconScale } from '@tabler/icons-react';
 
 export const dynamic = 'force-dynamic';
@@ -46,44 +48,8 @@ export default async function PredictPage({
     for (const p of data ?? []) myPreds[p.match_id] = p;
   }
 
-  // 人类榜：前 100（user_scores 视图）+ 关联档案
-  const { data: topScores } = await supabase
-    .from('user_scores')
-    .select('user_id, total_points')
-    .order('total_points', { ascending: false })
-    .limit(100);
-  const topIds = (topScores ?? []).map((r) => r.user_id);
-  let topProfiles = new Map<string, { display_name: string | null; avatar_url: string | null }>();
-  if (topIds.length) {
-    const { data: profs } = await supabase
-      .from('profiles')
-      .select('user_id, display_name, avatar_url')
-      .in('user_id', topIds);
-    topProfiles = new Map((profs ?? []).map((p) => [p.user_id, [p][0]]));
-  }
-  const human = (topScores ?? []).map((r) => ({
-    name: topProfiles.get(r.user_id)?.display_name ?? 'Player',
-    avatar: topProfiles.get(r.user_id)?.avatar_url ?? null,
-    points: r.total_points,
-    isMe: r.user_id === user?.id,
-  }));
-
-  // 我的排名（即使掉出前 100 也显示）：比我分高的人数 + 1
-  let myRank: { rank: number; points: number } | null = null;
-  if (user) {
-    const { data: mine } = await supabase
-      .from('user_scores')
-      .select('total_points')
-      .eq('user_id', user.id)
-      .maybeSingle();
-    if (mine) {
-      const { count } = await supabase
-        .from('user_scores')
-        .select('*', { count: 'exact', head: true })
-        .gt('total_points', mine.total_points);
-      myRank = { rank: (count ?? 0) + 1, points: mine.total_points };
-    }
-  }
+  // 人类榜：前 100 + 我的排名（与首页共用同一查询）
+  const { rows: human, myRank } = await fetchHumanBoard(supabase, 100, user?.id ?? null);
 
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
@@ -195,49 +161,17 @@ export default async function PredictPage({
         <h2 className="mb-3 inline-flex items-center gap-2 text-base font-medium text-ink">
           <IconUser size={18} /> {t.humanBoard}
         </h2>
-        {human.length === 0 ? (
-          <p className="rounded-card border border-hairline bg-canvas-card p-6 text-center text-sm text-mute">
-            {t.humanEmpty}
-          </p>
-        ) : (
-          <div className="rounded-card border border-hairline bg-canvas-card p-2">
-            {human.map((h, i) => (
-              <div
-                key={i}
-                className={`flex items-center gap-3 rounded-card px-3 py-2 ${h.isMe ? 'bg-sunset/10' : ''}`}
-              >
-                <span className={`w-5 text-center text-sm ${i === 0 ? 'text-sunset' : 'text-mute'}`}>
-                  {i + 1}
-                </span>
-                {h.avatar ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={h.avatar} alt="" className="h-6 w-6 rounded-full object-cover" />
-                ) : (
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-hairline text-mute">
-                    <IconUser size={13} />
-                  </span>
-                )}
-                <span className="flex-1 truncate text-sm text-ink">
-                  {h.name}
-                  {h.isMe && <span className="ml-1 text-xs text-sunset">· {t.you}</span>}
-                </span>
-                <span className="font-mono text-sm text-body">{h.points}</span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {myRank && (
-          <div className="mt-2 flex items-center gap-3 rounded-card border border-sunset/30 bg-sunset/10 px-3 py-2.5">
-            <span className="text-xs text-sunset">{t.yourRank}</span>
-            <span className="flex-1 text-sm font-medium text-ink">
-              {fill(t.rankFmt, { n: myRank.rank })}
-            </span>
-            <span className="font-mono text-sm text-body">
-              {myRank.points} {t.ptsUnit}
-            </span>
-          </div>
-        )}
+        <HumanBoard
+          rows={human}
+          myRank={myRank}
+          t={{
+            you: t.you,
+            yourRank: t.yourRank,
+            rankFmt: t.rankFmt,
+            ptsUnit: t.ptsUnit,
+            humanEmpty: t.humanEmpty,
+          }}
+        />
       </section>
     </main>
   );

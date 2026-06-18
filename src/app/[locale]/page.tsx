@@ -6,6 +6,8 @@ import ModelLineChart from '@/components/charts/ModelLineChart';
 import LocalTime from '@/components/LocalTime';
 import CollapsibleStance from '@/components/CollapsibleStance';
 import ScoringRules from '@/components/ScoringRules';
+import HumanBoard from '@/components/HumanBoard';
+import { fetchHumanBoard } from '@/lib/leaderboard';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import {
@@ -16,6 +18,7 @@ import {
   IconCalendar,
   IconScale,
   IconArrowRight,
+  IconUser,
 } from '@tabler/icons-react';
 
 export const dynamic = 'force-dynamic';
@@ -109,6 +112,12 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
     )
     .order('kickoff_utc', { ascending: true });
   const allMatches = (allMatchesData ?? []) as unknown as SchedMatch[];
+
+  // 人类榜（首页精简版：Top5 + 我的排名）
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { rows: humanRows, myRank } = await fetchHumanBoard(supabase, 5, user?.id ?? null);
 
   // 首页固定展示「一前一后」两场——都必须有 AI 预测：
   //   upcoming = 有预测的下一场即将开赛（紧凑卡，赛前邀请用户预测）
@@ -294,36 +303,63 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
         </section>
       )}
 
-      {/* 统计：模型榜 + 图表 */}
-      <section id="leaderboard" className="mt-14 grid scroll-mt-20 gap-6 lg:grid-cols-2">
-        <div>
-          <h2 className="mb-4 inline-flex items-center gap-2 text-xl font-medium text-ink">
-            <IconTrophy size={20} /> {t.leaderboard}
-          </h2>
-          <div className="rounded-card border border-hairline bg-canvas-card p-2">
-            {leaderboard.map((m, i) => (
-              <div
-                key={m.name}
-                className="flex items-center gap-3 rounded-card px-3 py-2"
-              >
-                <span className={`w-5 text-center text-sm ${i === 0 ? 'text-sunset' : 'text-mute'}`}>
-                  {i + 1}
-                </span>
-                <ModelAvatar name={m.name} provider={m.provider} size={28} />
-                <span className="flex-1 truncate text-sm text-ink">{m.name}</span>
-                <span className="font-mono text-sm text-body">
-                  {anySettled ? `${m.points} ${t.ptsUnit}` : '—'}
-                </span>
-              </div>
-            ))}
-            {!anySettled && (
-              <p className="px-3 py-2 text-center text-xs text-mute">{t.noSettled}</p>
-            )}
+      {/* 统计：模型榜(AI) vs 人类榜 并排，积分赛跑折线图整宽在下 */}
+      <section id="leaderboard" className="mt-14 scroll-mt-20">
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* 模型榜（AI） */}
+          <div>
+            <h2 className="mb-4 inline-flex items-center gap-2 text-xl font-medium text-ink">
+              <IconTrophy size={20} /> {t.leaderboard}
+            </h2>
+            <div className="rounded-card border border-hairline bg-canvas-card p-2">
+              {leaderboard.map((m, i) => (
+                <div key={m.name} className="flex items-center gap-3 rounded-card px-3 py-2">
+                  <span className={`w-5 text-center text-sm ${i === 0 ? 'text-sunset' : 'text-mute'}`}>
+                    {i + 1}
+                  </span>
+                  <ModelAvatar name={m.name} provider={m.provider} size={28} />
+                  <span className="flex-1 truncate text-sm text-ink">{m.name}</span>
+                  <span className="font-mono text-sm text-body">
+                    {anySettled ? `${m.points} ${t.ptsUnit}` : '—'}
+                  </span>
+                </div>
+              ))}
+              {!anySettled && (
+                <p className="px-3 py-2 text-center text-xs text-mute">{t.noSettled}</p>
+              )}
+            </div>
+            <p className="mt-2 px-1 text-xs text-mute">{t.since}</p>
           </div>
-          <p className="mt-2 px-1 text-xs text-mute">{t.since}</p>
+
+          {/* 人类榜（Top5 + 我的排名，完整版在预测页） */}
+          <div>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="inline-flex items-center gap-2 text-xl font-medium text-ink">
+                <IconUser size={20} /> {dict.predict.humanBoard}
+              </h2>
+              <a
+                href={`/${locale}/predict`}
+                className="inline-flex items-center gap-1 text-sm text-mute hover:text-body"
+              >
+                {t.humanViewAll} <IconArrowRight size={15} />
+              </a>
+            </div>
+            <HumanBoard
+              rows={humanRows}
+              myRank={myRank}
+              t={{
+                you: dict.predict.you,
+                yourRank: dict.predict.yourRank,
+                rankFmt: dict.predict.rankFmt,
+                ptsUnit: dict.predict.ptsUnit,
+                humanEmpty: dict.predict.humanEmpty,
+              }}
+            />
+          </div>
         </div>
 
-        <div>
+        {/* 积分赛跑（整宽） */}
+        <div className="mt-6">
           <h2 className="mb-4 inline-flex items-center gap-2 text-xl font-medium text-ink">
             <IconChartLine size={20} /> {t.chartTitle}
           </h2>

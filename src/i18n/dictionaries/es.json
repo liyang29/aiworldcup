@@ -85,6 +85,7 @@
     "ptsUnit": "pts",
     "noSettled": "Aún no hay partidos finalizados — la clasificación se actualiza después",
     "since": "Predicciones de IA desde el 16 jun 2026 — los partidos anteriores son previos al sistema.",
+    "humanViewAll": "Clasificación completa",
     "chartPoints": "Puntos",
     "chartAccuracy": "Acierto",
     "sample": "Datos de ejemplo · datos reales al comenzar"
