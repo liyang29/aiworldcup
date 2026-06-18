@@ -81,8 +81,26 @@ export default async function MatchPage({
   const stageLabel = (t.stages as Record<string, string>)[match.stage] ?? match.stage;
   const groupLabel = match.group_label ? fill(t.groupFmt, { g: match.group_label }) : '';
 
+  // SportsEvent 结构化数据（JSON-LD）：让谷歌识别这是一场足球赛事
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SportsEvent',
+    name: `${home?.name ?? '?'} vs ${away?.name ?? '?'}`,
+    sport: 'Soccer',
+    startDate: match.kickoff_utc,
+    eventStatus: 'https://schema.org/EventScheduled',
+    homeTeam: { '@type': 'SportsTeam', name: home?.name ?? '?' },
+    awayTeam: { '@type': 'SportsTeam', name: away?.name ?? '?' },
+    url: `https://predworld.fun/${params.locale}/match/${params.id}`,
+    ...(match.venue ? { location: { '@type': 'Place', name: match.venue } } : {}),
+  };
+
   return (
     <main className="mx-auto max-w-[1440px] px-4 pb-20 pt-5 sm:px-6 lg:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <a
         href={`/${params.locale}`}
         className="mb-5 inline-flex items-center gap-1.5 text-sm text-mute hover:text-body"
