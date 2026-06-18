@@ -6,10 +6,25 @@ import PredictForm from '@/components/predict/PredictForm';
 import ScoringRules from '@/components/ScoringRules';
 import LocalTime from '@/components/LocalTime';
 import { IconBallFootball, IconClock, IconCheck, IconUser, IconScale, IconArrowRight } from '@tabler/icons-react';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
 const LOCALE_TAG: Record<Locale, string> = { en: 'en-US', zh: 'zh-CN', es: 'es-ES' };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: Locale };
+}): Promise<Metadata> {
+  const m = (await getDictionary(params.locale)).meta;
+  return {
+    title: m.predictTitle,
+    description: m.predictDesc,
+    openGraph: { title: m.predictTitle, description: m.predictDesc },
+    twitter: { title: m.predictTitle, description: m.predictDesc },
+  };
+}
 
 export default async function PredictPage({
   params,

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { getDictionary } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
@@ -7,6 +8,20 @@ import { fetchHumanBoard } from '@/lib/leaderboard';
 import { IconUser } from '@tabler/icons-react';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: Locale };
+}): Promise<Metadata> {
+  const m = (await getDictionary(params.locale)).meta;
+  return {
+    title: m.leaderboardTitle,
+    description: m.leaderboardDesc,
+    openGraph: { title: m.leaderboardTitle, description: m.leaderboardDesc },
+    twitter: { title: m.leaderboardTitle, description: m.leaderboardDesc },
+  };
+}
 
 export default async function LeaderboardPage({ params }: { params: { locale: Locale } }) {
   const dict = await getDictionary(params.locale);

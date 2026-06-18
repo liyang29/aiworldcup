@@ -14,6 +14,31 @@ export const dynamic = 'force-dynamic';
 
 const LOCALE_TAG: Record<Locale, string> = { en: 'en-US', zh: 'zh-CN', es: 'es-ES' };
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string; locale: Locale };
+}): Promise<import('next').Metadata> {
+  const dict = await getDictionary(params.locale);
+  const supabase = createClient();
+  const { data } = await supabase
+    .from('matches')
+    .select('home:home_team_id(name), away:away_team_id(name)')
+    .eq('id', params.id)
+    .single();
+  const mm = data as any;
+  const home = mm?.home?.name ?? '?';
+  const away = mm?.away?.name ?? '?';
+  const title = fill(dict.meta.matchTitleFmt, { home, away });
+  const description = fill(dict.meta.matchDescFmt, { home, away });
+  return {
+    title,
+    description,
+    openGraph: { title, description },
+    twitter: { title, description },
+  };
+}
+
 export default async function MatchPage({
   params,
 }: {

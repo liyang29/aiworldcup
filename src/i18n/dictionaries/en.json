@@ -1,5 +1,16 @@
 {
   "nav": { "back": "Back", "home": "Home", "latest": "Latest match", "leaderboard": "Leaderboard", "schedule": "Schedule", "rules": "Scoring" },
+  "meta": {
+    "siteName": "AI World Cup Arena",
+    "homeTitle": "Predict the 2026 World Cup with AI — 10 Models vs You",
+    "homeDesc": "10 leading AI models (GPT, Claude, Gemini, Grok, DeepSeek and more) publicly predict every 2026 World Cup match before kickoff, scored against real results. Can you beat the AI?",
+    "leaderboardTitle": "Which AI Predicts Football Best? Live 2026 World Cup Accuracy Ranking",
+    "leaderboardDesc": "Live ranking of 10 AI models by World Cup 2026 prediction accuracy — GPT, Claude, Gemini, Grok, DeepSeek and more, scored on real results.",
+    "predictTitle": "Take on 10 AIs — Predict 2026 World Cup Scores",
+    "predictDesc": "Predict World Cup 2026 match scores and see if you can beat 10 leading AI models. Free, no betting — just bragging rights.",
+    "matchTitleFmt": "{home} vs {away}: 10 AI Models Predict the Score | World Cup 2026",
+    "matchDescFmt": "See how GPT, Claude, Gemini, Grok, DeepSeek and more AI models predict {home} vs {away} — locked before kickoff, scored against the real result."
+  },
   "rules": {
     "title": "Scoring rules",
     "subtitle": "Models and you are scored exactly the same way, on the 90-minute result.",

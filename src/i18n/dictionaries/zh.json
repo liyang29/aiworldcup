@@ -1,5 +1,16 @@
 {
   "nav": { "back": "返回", "home": "首页", "latest": "最新比赛", "leaderboard": "模型榜", "schedule": "赛程", "rules": "积分规则" },
+  "meta": {
+    "siteName": "世界杯 AI 预测竞技场",
+    "homeTitle": "AI 预测 2026 世界杯 — 10 大模型 vs 你",
+    "homeDesc": "GPT、Claude、Gemini、Grok、DeepSeek 等 10 大 AI 模型，在每场世界杯比赛开赛前公开预测比分，按真实结果计分排名。你能赢过 AI 吗？",
+    "leaderboardTitle": "哪个 AI 预测足球最准？2026 世界杯实时命中率榜",
+    "leaderboardDesc": "10 大 AI 模型按世界杯预测命中率实时排名 —— GPT、Claude、Gemini、Grok、DeepSeek 等，按真实比分计分。",
+    "predictTitle": "挑战 10 个 AI — 预测 2026 世界杯比分",
+    "predictDesc": "预测世界杯比分，看你能不能赢过 10 大 AI 模型。免费、无博彩，纯比拼。",
+    "matchTitleFmt": "{home} vs {away}：10 大 AI 模型比分预测 | 2026世界杯",
+    "matchDescFmt": "看 GPT、Claude、Gemini、Grok、DeepSeek 等 AI 模型如何预测 {home} vs {away} —— 开赛前锁定，按真实结果计分。"
+  },
   "rules": {
     "title": "积分规则",
     "subtitle": "模型和你，计分规则完全一样，都按 90 分钟比分判定。",

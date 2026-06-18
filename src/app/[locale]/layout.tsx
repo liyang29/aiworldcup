@@ -5,11 +5,34 @@ import { getDictionary } from '@/i18n/dictionaries';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 
-export const metadata: Metadata = {
-  title: '世界杯 AI 预测竞技场',
-  description:
-    '让主流大模型在 2026 世界杯每场比赛赛前公开预测，按真实结果计分排名。你能赢过 GPT 吗？',
-};
+const OG_LOCALE: Record<Locale, string> = { en: 'en_US', zh: 'zh_CN', es: 'es_ES' };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: Locale };
+}): Promise<Metadata> {
+  const dict = await getDictionary(params.locale);
+  const m = dict.meta;
+  return {
+    metadataBase: new URL('https://predworld.fun'),
+    title: { default: m.homeTitle, template: `%s` },
+    description: m.homeDesc,
+    applicationName: m.siteName,
+    openGraph: {
+      type: 'website',
+      siteName: m.siteName,
+      locale: OG_LOCALE[params.locale],
+      title: m.homeTitle,
+      description: m.homeDesc,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: m.homeTitle,
+      description: m.homeDesc,
+    },
+  };
+}
 
 export const viewport: Viewport = {
   width: 'device-width',

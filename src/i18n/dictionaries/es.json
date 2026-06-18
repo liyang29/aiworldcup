@@ -1,5 +1,16 @@
 {
   "nav": { "back": "Volver", "home": "Inicio", "latest": "Último partido", "leaderboard": "Clasificación", "schedule": "Calendario", "rules": "Puntuación" },
+  "meta": {
+    "siteName": "Arena de Predicción IA · Mundial",
+    "homeTitle": "Predice el Mundial 2026 con IA — 10 modelos vs ti",
+    "homeDesc": "10 modelos de IA líderes (GPT, Claude, Gemini, Grok, DeepSeek y más) predicen públicamente cada partido del Mundial 2026 antes del saque, puntuados con resultados reales. ¿Puedes ganarle a la IA?",
+    "leaderboardTitle": "¿Qué IA predice mejor el fútbol? Ranking de acierto · Mundial 2026",
+    "leaderboardDesc": "Ranking en vivo de 10 modelos de IA por acierto en el Mundial 2026 — GPT, Claude, Gemini, Grok, DeepSeek y más, puntuados con resultados reales.",
+    "predictTitle": "Reta a 10 IAs — Predice los marcadores del Mundial 2026",
+    "predictDesc": "Predice los marcadores del Mundial 2026 y comprueba si puedes ganarle a 10 modelos de IA. Gratis, sin apuestas.",
+    "matchTitleFmt": "{home} vs {away}: 10 modelos de IA predicen el marcador | Mundial 2026",
+    "matchDescFmt": "Mira cómo GPT, Claude, Gemini, Grok, DeepSeek y más modelos de IA predicen {home} vs {away} — fijado antes del saque, puntuado con el resultado real."
+  },
   "rules": {
     "title": "Reglas de puntuación",
     "subtitle": "Los modelos y tú se puntúan exactamente igual, según el resultado a los 90 minutos.",
