@@ -7,6 +7,7 @@ import ScoringRules from '@/components/ScoringRules';
 import LocalTime from '@/components/LocalTime';
 import { IconBallFootball, IconClock, IconCheck, IconUser, IconScale, IconArrowRight } from '@tabler/icons-react';
 import type { Metadata } from 'next';
+import { altLinks } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +22,8 @@ export async function generateMetadata({
   return {
     title: m.predictTitle,
     description: m.predictDesc,
-    openGraph: { title: m.predictTitle, description: m.predictDesc },
+    alternates: altLinks(params.locale, '/predict'),
+    openGraph: { title: m.predictTitle, description: m.predictDesc, url: `/${params.locale}/predict` },
     twitter: { title: m.predictTitle, description: m.predictDesc },
   };
 }

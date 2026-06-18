@@ -10,6 +10,7 @@ import HumanBoard from '@/components/HumanBoard';
 import { fetchHumanBoard } from '@/lib/leaderboard';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
+import { altLinks } from '@/lib/seo';
 import {
   IconTrophy,
   IconBallFootball,
@@ -24,6 +25,13 @@ import {
 export const dynamic = 'force-dynamic';
 
 const LOCALE_TAG: Record<Locale, string> = { en: 'en-US', zh: 'zh-CN', es: 'es-ES' };
+
+export function generateMetadata({ params }: { params: { locale: Locale } }): import('next').Metadata {
+  return {
+    alternates: altLinks(params.locale, ''),
+    openGraph: { url: `/${params.locale}` },
+  };
+}
 
 export default async function Home({ params }: { params: { locale: Locale } }) {
   const locale = params.locale;
