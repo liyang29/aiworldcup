@@ -38,6 +38,7 @@
     "otherMatches": "Other upcoming matches",
     "predicted": "Predicted",
     "humanBoard": "Human leaderboard",
+    "humanTop100": "Top 100 players · your rank is highlighted",
     "you": "You",
     "yourRank": "Your rank",
     "rankFmt": "#{n}",

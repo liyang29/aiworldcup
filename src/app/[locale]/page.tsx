@@ -117,7 +117,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const { rows: humanRows, myRank } = await fetchHumanBoard(supabase, 5, user?.id ?? null);
+  const { rows: humanRows, myRank } = await fetchHumanBoard(supabase, 10, user?.id ?? null);
 
   // 首页固定展示「一前一后」两场——都必须有 AI 预测：
   //   upcoming = 有预测的下一场即将开赛（紧凑卡，赛前邀请用户预测）
@@ -338,7 +338,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
                 <IconUser size={20} /> {dict.predict.humanBoard}
               </h2>
               <a
-                href={`/${locale}/predict`}
+                href={`/${locale}/leaderboard`}
                 className="inline-flex items-center gap-1 text-sm text-mute hover:text-body"
               >
                 {t.humanViewAll} <IconArrowRight size={15} />

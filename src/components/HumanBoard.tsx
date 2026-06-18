@@ -31,6 +31,7 @@ export default function HumanBoard({
           {rows.map((h, i) => (
             <div
               key={i}
+              id={h.isMe ? 'me-row' : undefined}
               className={`flex items-center gap-3 rounded-card px-3 py-2 ${h.isMe ? 'bg-sunset/10' : ''}`}
             >
               <span className={`w-5 text-center text-sm ${i === 0 ? 'text-sunset' : 'text-mute'}`}>

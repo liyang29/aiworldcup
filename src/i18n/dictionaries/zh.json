@@ -38,6 +38,7 @@
     "otherMatches": "其它即将开赛",
     "predicted": "已预测",
     "humanBoard": "人类榜",
+    "humanTop100": "前 100 名 · 已高亮你的名次",
     "you": "你",
     "yourRank": "你的排名",
     "rankFmt": "第 {n} 名",

@@ -5,9 +5,7 @@ import type { Locale } from '@/i18n/config';
 import PredictForm from '@/components/predict/PredictForm';
 import ScoringRules from '@/components/ScoringRules';
 import LocalTime from '@/components/LocalTime';
-import HumanBoard from '@/components/HumanBoard';
-import { fetchHumanBoard } from '@/lib/leaderboard';
-import { IconBallFootball, IconClock, IconCheck, IconUser, IconScale } from '@tabler/icons-react';
+import { IconBallFootball, IconClock, IconCheck, IconUser, IconScale, IconArrowRight } from '@tabler/icons-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,8 +46,6 @@ export default async function PredictPage({
     for (const p of data ?? []) myPreds[p.match_id] = p;
   }
 
-  // 人类榜：前 100 + 我的排名（与首页共用同一查询）
-  const { rows: human, myRank } = await fetchHumanBoard(supabase, 100, user?.id ?? null);
 
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
@@ -156,22 +152,19 @@ export default async function PredictPage({
         </section>
       )}
 
-      {/* 人类榜 */}
+      {/* 人类榜入口（完整榜单在专门页） */}
       <section className="mt-8">
-        <h2 className="mb-3 inline-flex items-center gap-2 text-base font-medium text-ink">
-          <IconUser size={18} /> {t.humanBoard}
-        </h2>
-        <HumanBoard
-          rows={human}
-          myRank={myRank}
-          t={{
-            you: t.you,
-            yourRank: t.yourRank,
-            rankFmt: t.rankFmt,
-            ptsUnit: t.ptsUnit,
-            humanEmpty: t.humanEmpty,
-          }}
-        />
+        <a
+          href={`/${locale}/leaderboard`}
+          className="flex items-center justify-between rounded-card border border-hairline bg-canvas-card px-4 py-3.5 transition-colors hover:border-mute"
+        >
+          <span className="inline-flex items-center gap-2 text-sm font-medium text-ink">
+            <IconUser size={18} /> {t.humanBoard}
+          </span>
+          <span className="inline-flex items-center gap-1 text-sm text-mute">
+            {dict.home.humanViewAll} <IconArrowRight size={15} />
+          </span>
+        </a>
       </section>
     </main>
   );

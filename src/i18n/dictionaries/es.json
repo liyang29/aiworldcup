@@ -38,6 +38,7 @@
     "otherMatches": "Otros próximos partidos",
     "predicted": "Predicho",
     "humanBoard": "Clasificación humana",
+    "humanTop100": "Top 100 · tu posición está resaltada",
     "you": "Tú",
     "yourRank": "Tu posición",
     "rankFmt": "#{n}",
