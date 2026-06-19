@@ -5,7 +5,8 @@ import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import { altLinks, ogMeta } from '@/lib/seo';
 import { scoreLine } from '@/lib/scoring';
-import { IconArrowLeft, IconBallFootball, IconArrowRight } from '@tabler/icons-react';
+import BackLink from '@/components/BackLink';
+import { IconBallFootball, IconArrowRight } from '@tabler/icons-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -102,12 +103,7 @@ export default async function SharePredictionPage({
 
   return (
     <main className="mx-auto max-w-[1440px] px-4 pb-20 pt-5 sm:px-6 lg:px-8">
-      <a
-        href={`/${params.locale}`}
-        className="mb-5 inline-flex items-center gap-1.5 text-sm text-mute hover:text-body"
-      >
-        <IconArrowLeft size={16} /> {dict.nav.back}
-      </a>
+      <BackLink home={`/${params.locale}`} label={dict.nav.back} />
 
       <section className="rounded-card border border-hairline bg-canvas-card p-6 sm:p-8">
         <div className="mb-6 flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.16em] text-mute">

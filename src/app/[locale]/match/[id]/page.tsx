@@ -2,15 +2,11 @@ import { createClient } from '@/lib/supabase/server';
 import StanceBoard, { type Pred } from '@/components/match/StanceBoard';
 import LocalTime from '@/components/LocalTime';
 import ShareButtons from '@/components/ShareButtons';
+import BackLink from '@/components/BackLink';
 import { altLinks, ogMeta } from '@/lib/seo';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
-import {
-  IconArrowLeft,
-  IconBallFootball,
-  IconClock,
-  IconMapPin,
-} from '@tabler/icons-react';
+import { IconBallFootball, IconClock, IconMapPin } from '@tabler/icons-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -114,12 +110,7 @@ export default async function MatchPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <a
-        href={`/${params.locale}`}
-        className="mb-5 inline-flex items-center gap-1.5 text-sm text-mute hover:text-body"
-      >
-        <IconArrowLeft size={16} /> {dict.nav.back}
-      </a>
+      <BackLink home={`/${params.locale}`} label={dict.nav.back} />
 
       <section className="rounded-card border border-hairline bg-canvas-card p-6 sm:p-8">
         <div className="mb-6 flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.16em] text-mute">
