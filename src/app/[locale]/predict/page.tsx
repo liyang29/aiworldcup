@@ -5,6 +5,7 @@ import type { Locale } from '@/i18n/config';
 import PredictForm from '@/components/predict/PredictForm';
 import ScoringRules from '@/components/ScoringRules';
 import LocalTime from '@/components/LocalTime';
+import ShareButtons from '@/components/ShareButtons';
 import { IconBallFootball, IconClock, IconCheck, IconUser, IconScale, IconArrowRight } from '@tabler/icons-react';
 import type { Metadata } from 'next';
 import { altLinks, ogMeta } from '@/lib/seo';
@@ -111,6 +112,13 @@ export default async function PredictPage({
                 {myPreds[selected.id].pred_home}-{myPreds[selected.id].pred_away}
               </div>
               <div className="mt-1 text-xs text-mute">{t.locked}</div>
+              <div className="mt-4 border-t border-hairline pt-4">
+                <ShareButtons
+                  url={`https://www.predworld.fun/${locale}/p/${selected.id}/${myPreds[selected.id].pred_home}-${myPreds[selected.id].pred_away}`}
+                  title={`I predicted ${selected.home?.name ?? '?'} ${myPreds[selected.id].pred_home}-${myPreds[selected.id].pred_away} ${selected.away?.name ?? '?'}. Can you beat me and 10 AIs? predworld.fun`}
+                  t={{ share: t.shareMine, copied: dict.match.copied }}
+                />
+              </div>
             </div>
           ) : (
             <PredictForm

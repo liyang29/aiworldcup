@@ -66,6 +66,7 @@
     "fillFirst": "Introduce el marcador primero",
     "yourPrediction": "Tu predicción",
     "locked": "Bloqueada — no se puede cambiar",
+    "shareMine": "Compartir mi pronóstico",
     "otherMatches": "Otros próximos partidos",
     "predicted": "Predicho",
     "humanBoard": "Clasificación humana",
@@ -144,6 +145,12 @@
     "noPredictions": "Aún no hay predicciones para este partido.",
     "share": "Compartir",
     "copied": "¡Copiado!"
+  },
+  "sharecard": {
+    "predicted": "Pronóstico",
+    "agreeFmt": "{n} de {total} modelos de IA coinciden",
+    "beatFmt": "Este pronóstico superó a {n} de {total} modelos de IA",
+    "cta": "Haz tu propio pronóstico"
   },
   "stance": {
     "backs": "Por {team}",

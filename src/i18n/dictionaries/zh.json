@@ -66,6 +66,7 @@
     "fillFirst": "请先填写比分",
     "yourPrediction": "你的预测",
     "locked": "已锁定，不可修改",
+    "shareMine": "分享我的预测",
     "otherMatches": "其它即将开赛",
     "predicted": "已预测",
     "humanBoard": "人类榜",
@@ -144,6 +145,12 @@
     "noPredictions": "这场比赛还没有模型预测。",
     "share": "分享",
     "copied": "已复制！"
+  },
+  "sharecard": {
+    "predicted": "预测",
+    "agreeFmt": "{total} 个 AI 模型中 {n} 个同意",
+    "beatFmt": "这个预测赢了 {total} 个 AI 模型中的 {n} 个",
+    "cta": "做出你自己的预测"
   },
   "stance": {
     "backs": "看好 {team}",

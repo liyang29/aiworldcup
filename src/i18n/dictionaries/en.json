@@ -66,6 +66,7 @@
     "fillFirst": "Enter the score first",
     "yourPrediction": "Your prediction",
     "locked": "Locked — can't be changed",
+    "shareMine": "Share my prediction",
     "otherMatches": "Other upcoming matches",
     "predicted": "Predicted",
     "humanBoard": "Human leaderboard",
@@ -144,6 +145,12 @@
     "noPredictions": "No model predictions for this match yet.",
     "share": "Share",
     "copied": "Copied!"
+  },
+  "sharecard": {
+    "predicted": "Predicted",
+    "agreeFmt": "{n} of {total} AI models agree",
+    "beatFmt": "This prediction beat {n} of {total} AI models",
+    "cta": "Make your own prediction"
   },
   "stance": {
     "backs": "Backing {team}",
