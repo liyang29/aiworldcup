@@ -5,6 +5,7 @@ import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import { altLinks, ogMeta } from '@/lib/seo';
 import { scoreLine } from '@/lib/scoring';
+import { teamName } from '@/i18n/teams';
 import BackLink from '@/components/BackLink';
 import { IconBallFootball, IconArrowRight } from '@tabler/icons-react';
 
@@ -34,7 +35,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const dict = await getDictionary(params.locale);
   const pk = parsePick(params.pick);
-  const { home, away } = await fetchTeams(params.id);
+  const raw = await fetchTeams(params.id);
+  const home = teamName(raw.home, params.locale);
+  const away = teamName(raw.away, params.locale);
   const score = pk ? `${pk[0]}-${pk[1]}` : '';
   const title = `${home} ${score} ${away} — ${dict.home.hook}`;
   const description = `${dict.sharecard.predicted}: ${home} ${score} ${away}. ${dict.meta.leaderboardDesc}`;
@@ -80,6 +83,8 @@ export default async function SharePredictionPage({
   const [ph, pa] = pk;
   const home = match.home;
   const away = match.away;
+  const homeLoc = teamName(home?.name, params.locale) || '?';
+  const awayLoc = teamName(away?.name, params.locale) || '?';
   const finished = match.status === 'finished';
 
   const { data: preds } = await supabase
@@ -113,7 +118,7 @@ export default async function SharePredictionPage({
         </div>
 
         <div className="mx-auto flex max-w-xl items-center justify-between gap-2">
-          <TeamSide name={home?.name} flag={home?.flag_url} />
+          <TeamSide name={homeLoc} flag={home?.flag_url} />
           <div className="flex shrink-0 flex-col items-center px-1">
             {finished ? (
               <div className="text-2xl font-medium text-mute sm:text-3xl">
@@ -125,7 +130,7 @@ export default async function SharePredictionPage({
               <div className="text-xl font-medium text-mute">{t.vs}</div>
             )}
           </div>
-          <TeamSide name={away?.name} flag={away?.flag_url} />
+          <TeamSide name={awayLoc} flag={away?.flag_url} />
         </div>
 
         {/* 这个分享的预测 */}
@@ -150,8 +155,8 @@ export default async function SharePredictionPage({
       {predictions.length > 0 && (
         <StanceBoard
           predictions={predictions}
-          homeName={home?.name ?? '?'}
-          awayName={away?.name ?? '?'}
+          homeName={homeLoc}
+          awayName={awayLoc}
           isKnockout={match.stage !== 'group'}
           t={dict.stance}
         />

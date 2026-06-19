@@ -9,6 +9,7 @@ import ShareButtons from '@/components/ShareButtons';
 import { IconBallFootball, IconClock, IconCheck, IconUser, IconScale, IconArrowRight } from '@tabler/icons-react';
 import type { Metadata } from 'next';
 import { altLinks, ogMeta } from '@/lib/seo';
+import { teamName } from '@/i18n/teams';
 
 export const dynamic = 'force-dynamic';
 
@@ -94,7 +95,7 @@ export default async function PredictPage({
       ) : (
         <section className="mt-8 rounded-card border border-hairline bg-canvas-card p-6">
           <div className="mb-5 flex items-center justify-center gap-4 text-center">
-            <Team name={selected.home?.name} flag={selected.home?.flag_url} />
+            <Team name={teamName(selected.home?.name, locale)} flag={selected.home?.flag_url} />
             <div className="flex flex-col items-center">
               <span className="text-lg font-medium text-mute">VS</span>
               <span className="mt-1 inline-flex items-center gap-1 text-[11px] text-mute">
@@ -102,7 +103,7 @@ export default async function PredictPage({
                 <LocalTime utc={selected.kickoff_utc} localeTag={LOCALE_TAG[locale]} options={timeOpts} />
               </span>
             </div>
-            <Team name={selected.away?.name} flag={selected.away?.flag_url} />
+            <Team name={teamName(selected.away?.name, locale)} flag={selected.away?.flag_url} />
           </div>
 
           {myPreds[selected.id] ? (
@@ -124,8 +125,8 @@ export default async function PredictPage({
             <PredictForm
               matchId={selected.id}
               locale={locale}
-              homeName={selected.home?.name ?? '?'}
-              awayName={selected.away?.name ?? '?'}
+              homeName={teamName(selected.home?.name, locale) || '?'}
+              awayName={teamName(selected.away?.name, locale) || '?'}
               siteKey={siteKey}
               t={{
                 submit: t.submit,
@@ -165,7 +166,7 @@ export default async function PredictPage({
                 }`}
               >
                 <span className="flex-1 truncate text-ink">
-                  {m.home?.name} <span className="text-mute">vs</span> {m.away?.name}
+                  {teamName(m.home?.name, locale)} <span className="text-mute">vs</span> {teamName(m.away?.name, locale)}
                 </span>
                 {myPreds[m.id] ? (
                   <span className="inline-flex items-center gap-0.5 text-xs text-sunset">

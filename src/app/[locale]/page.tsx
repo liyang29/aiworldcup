@@ -11,6 +11,7 @@ import { fetchHumanBoard } from '@/lib/leaderboard';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import { altLinks, ogMeta } from '@/lib/seo';
+import { teamName } from '@/i18n/teams';
 import {
   IconTrophy,
   IconBallFootball,
@@ -211,7 +212,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
                 href={`/${locale}/match/${upcoming.id}`}
                 className="flex items-center justify-center gap-6 rounded-card border border-hairline bg-canvas-card p-5 transition-colors hover:border-mute"
               >
-                <TeamMini name={upcoming.home?.name} flag={upcoming.home?.flag_url} />
+                <TeamMini name={teamName(upcoming.home?.name, locale)} flag={upcoming.home?.flag_url} />
                 <div className="flex flex-col items-center">
                   <span className="text-2xl font-medium text-mute">{dict.match.vs}</span>
                   <span className="mt-1 inline-flex items-center gap-1 text-xs text-mute">
@@ -236,7 +237,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
                     {fill(t.predsCountFmt, { n: String(predCount.get(upcoming.id) ?? 0) })}
                   </span>
                 </div>
-                <TeamMini name={upcoming.away?.name} flag={upcoming.away?.flag_url} />
+                <TeamMini name={teamName(upcoming.away?.name, locale)} flag={upcoming.away?.flag_url} />
               </a>
 
               <div className="mt-4 flex justify-center">
@@ -250,8 +251,8 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
 
               <CollapsibleStance
                 predictions={upcomingPreds}
-                homeName={upcoming.home?.name ?? '?'}
-                awayName={upcoming.away?.name ?? '?'}
+                homeName={teamName(upcoming.home?.name, locale) || '?'}
+                awayName={teamName(upcoming.away?.name, locale) || '?'}
                 isKnockout={upcoming.stage !== 'group'}
                 t={dict.stance}
                 expandLabel={t.expand}
@@ -271,7 +272,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
                 href={`/${locale}/match/${recent.id}`}
                 className="mb-4 flex items-center justify-center gap-6 rounded-card border border-hairline bg-canvas-card p-5 transition-colors hover:border-mute"
               >
-                <TeamMini name={recent.home?.name} flag={recent.home?.flag_url} />
+                <TeamMini name={teamName(recent.home?.name, locale)} flag={recent.home?.flag_url} />
                 <div className="flex flex-col items-center">
                   {recent.home_score != null ? (
                     <span className="text-3xl font-medium text-ink">
@@ -307,14 +308,14 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
                     </span>
                   )}
                 </div>
-                <TeamMini name={recent.away?.name} flag={recent.away?.flag_url} />
+                <TeamMini name={teamName(recent.away?.name, locale)} flag={recent.away?.flag_url} />
               </a>
 
               {recentPreds.length > 0 && (
                 <StanceBoard
                   predictions={recentPreds}
-                  homeName={recent.home?.name ?? '?'}
-                  awayName={recent.away?.name ?? '?'}
+                  homeName={teamName(recent.home?.name, locale) || '?'}
+                  awayName={teamName(recent.away?.name, locale) || '?'}
                   isKnockout={recent.stage !== 'group'}
                   t={dict.stance}
                 />

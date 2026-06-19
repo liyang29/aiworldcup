@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { createClient } from '@supabase/supabase-js';
+import { teamName } from '@/i18n/teams';
 
 // 每场比赛的专属社交分享大图（1200×630）：队名 + 比分/VS + 10模型站队 + 品牌。
 export const runtime = 'edge';
@@ -7,7 +8,7 @@ export const alt = 'AI World Cup match prediction';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-export default async function Image({ params }: { params: { id: string } }) {
+export default async function Image({ params }: { params: { id: string; locale: string } }) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -24,8 +25,8 @@ export default async function Image({ params }: { params: { id: string } }) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mm = m as any;
-  const home = mm?.home?.name ?? 'Home';
-  const away = mm?.away?.name ?? 'Away';
+  const home = teamName(mm?.home?.name, params.locale) || 'Home';
+  const away = teamName(mm?.away?.name, params.locale) || 'Away';
   const finished = mm?.status === 'finished';
   const score = finished ? `${mm.home_score} - ${mm.away_score}` : 'VS';
 

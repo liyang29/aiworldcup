@@ -5,6 +5,7 @@ import ShareButtons from '@/components/ShareButtons';
 import BackLink from '@/components/BackLink';
 import { altLinks, ogMeta } from '@/lib/seo';
 import { getDictionary, fill } from '@/i18n/dictionaries';
+import { teamName } from '@/i18n/teams';
 import type { Locale } from '@/i18n/config';
 import { IconBallFootball, IconClock, IconMapPin } from '@tabler/icons-react';
 
@@ -25,8 +26,8 @@ export async function generateMetadata({
     .eq('id', params.id)
     .single();
   const mm = data as any;
-  const home = mm?.home?.name ?? '?';
-  const away = mm?.away?.name ?? '?';
+  const home = teamName(mm?.home?.name, params.locale) || '?';
+  const away = teamName(mm?.away?.name, params.locale) || '?';
   const title = fill(dict.meta.matchTitleFmt, { home, away });
   const description = fill(dict.meta.matchDescFmt, { home, away });
   return {
@@ -76,6 +77,8 @@ export default async function MatchPage({
   const predictions = (preds ?? []) as unknown as Pred[];
   const home = match.home as any;
   const away = match.away as any;
+  const homeLoc = teamName(home?.name, params.locale) || '?';
+  const awayLoc = teamName(away?.name, params.locale) || '?';
   const finished = match.status === 'finished';
   const isKnockout = match.stage !== 'group';
 
@@ -84,7 +87,7 @@ export default async function MatchPage({
 
   // SportsEvent 结构化数据（JSON-LD）：让谷歌识别这是一场足球赛事
   // 注：location 需真实场馆数据；当前 API 无 venue，故暂缺（该富结果低影响，不造假）。
-  const matchName = `${home?.name ?? '?'} vs ${away?.name ?? '?'}`;
+  const matchName = `${homeLoc} vs ${awayLoc}`;
   const endDate = new Date(
     new Date(match.kickoff_utc).getTime() + 2 * 3600 * 1000
   ).toISOString();
@@ -92,13 +95,13 @@ export default async function MatchPage({
     '@context': 'https://schema.org',
     '@type': 'SportsEvent',
     name: matchName,
-    description: fill(dict.meta.matchDescFmt, { home: home?.name ?? '?', away: away?.name ?? '?' }),
+    description: fill(dict.meta.matchDescFmt, { home: homeLoc, away: awayLoc }),
     sport: 'Soccer',
     startDate: match.kickoff_utc,
     endDate,
     eventStatus: 'https://schema.org/EventScheduled',
-    homeTeam: { '@type': 'SportsTeam', name: home?.name ?? '?' },
-    awayTeam: { '@type': 'SportsTeam', name: away?.name ?? '?' },
+    homeTeam: { '@type': 'SportsTeam', name: homeLoc },
+    awayTeam: { '@type': 'SportsTeam', name: awayLoc },
     image: `https://www.predworld.fun/${params.locale}/opengraph-image`,
     url: `https://www.predworld.fun/${params.locale}/match/${params.id}`,
     ...(match.venue ? { location: { '@type': 'Place', name: match.venue } } : {}),
@@ -120,7 +123,7 @@ export default async function MatchPage({
         </div>
 
         <div className="mx-auto flex max-w-xl items-center justify-between gap-2">
-          <TeamSide name={home?.name} flag={home?.flag_url} />
+          <TeamSide name={homeLoc} flag={home?.flag_url} />
           <div className="flex shrink-0 flex-col items-center px-1">
             {finished ? (
               <div className="text-4xl font-medium text-ink sm:text-5xl">
@@ -130,7 +133,7 @@ export default async function MatchPage({
               <div className="text-2xl font-medium text-mute sm:text-3xl">{t.vs}</div>
             )}
           </div>
-          <TeamSide name={away?.name} flag={away?.flag_url} />
+          <TeamSide name={awayLoc} flag={away?.flag_url} />
         </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-mute">
@@ -184,8 +187,8 @@ export default async function MatchPage({
       ) : (
         <StanceBoard
           predictions={predictions}
-          homeName={home?.name ?? '?'}
-          awayName={away?.name ?? '?'}
+          homeName={homeLoc}
+          awayName={awayLoc}
           isKnockout={isKnockout}
           t={dict.stance}
         />

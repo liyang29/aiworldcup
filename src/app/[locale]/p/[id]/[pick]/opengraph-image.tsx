@@ -1,6 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { createClient } from '@supabase/supabase-js';
 import { scoreLine } from '@/lib/scoring';
+import { teamName } from '@/i18n/teams';
 
 // 个人战绩分享卡（1200×630）：我的预测比分 + 与10个AI的对比 + 品牌。
 export const runtime = 'edge';
@@ -14,7 +15,7 @@ const parsePick = (p: string): [number, number] => {
   return m ? [Number(m[1]), Number(m[2])] : [0, 0];
 };
 
-export default async function Image({ params }: { params: { id: string; pick: string } }) {
+export default async function Image({ params }: { params: { id: string; pick: string; locale: string } }) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -31,8 +32,8 @@ export default async function Image({ params }: { params: { id: string; pick: st
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mm = m as any;
-  const home = mm?.home?.name ?? 'Home';
-  const away = mm?.away?.name ?? 'Away';
+  const home = teamName(mm?.home?.name, params.locale) || 'Home';
+  const away = teamName(mm?.away?.name, params.locale) || 'Away';
   const [ph, pa] = parsePick(params.pick);
   const finished = mm?.status === 'finished' && mm?.home_score != null;
   const list = preds ?? [];

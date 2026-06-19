@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { IconChevronRight } from '@tabler/icons-react';
+import { teamName } from '@/i18n/teams';
 
 export type SchedMatch = {
   id: string;
@@ -134,7 +135,7 @@ export default function ScheduleList({
                       {finished ? t.finishedShort : m.status === 'live' ? t.live : time}
                     </span>
                     <div className="flex flex-1 items-center justify-end gap-2 truncate text-sm text-ink">
-                      <span className="truncate">{m.home?.name}</span>
+                      <span className="truncate">{teamName(m.home?.name, locale)}</span>
                       <Flag name={m.home?.name} flag={m.home?.flag_url} />
                     </div>
                     <span className="w-12 shrink-0 text-center font-mono text-sm">
@@ -148,7 +149,7 @@ export default function ScheduleList({
                     </span>
                     <div className="flex flex-1 items-center gap-2 truncate text-sm text-ink">
                       <Flag name={m.away?.name} flag={m.away?.flag_url} />
-                      <span className="truncate">{m.away?.name}</span>
+                      <span className="truncate">{teamName(m.away?.name, locale)}</span>
                     </div>
                     <IconChevronRight size={15} className="shrink-0 text-mute" />
                   </Link>
