@@ -31,7 +31,11 @@ export default async function SiteHeader({ locale, dict }: { locale: Locale; dic
   return (
     <header className="sticky top-0 z-40 border-b border-hairline bg-canvas/90 backdrop-blur">
       <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-2 px-4 py-3 sm:gap-3 sm:px-6 lg:px-8">
-        <Link href={base} className="flex shrink-0 items-center gap-2">
+        <Link
+          href={base}
+          aria-label="AI World Cup — home"
+          className="-my-1 flex shrink-0 cursor-pointer items-center gap-2 rounded-md py-1 pr-2 transition-opacity hover:opacity-80"
+        >
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[7px] bg-sunset text-canvas">
             <IconTrophy size={17} stroke={2} />
           </span>
