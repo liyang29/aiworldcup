@@ -20,27 +20,36 @@ export default function AccountWidget({ t }: { t: AccountT }) {
     const supabase = createClient();
     let active = true;
     const load = async () => {
-      const {
-        data: { user: u },
-      } = await supabase.auth.getUser();
-      if (!active) return;
-      if (!u) {
-        setUser(null);
-        setLoaded(true);
-        return;
+      try {
+        const {
+          data: { user: u },
+        } = await supabase.auth.getUser();
+        if (!active) return;
+        if (!u) {
+          setUser(null);
+          return;
+        }
+        // 读档案失败不影响"已登录"显示（用默认头像兜底）
+        let name: string | null = null;
+        let avatar: string | null = null;
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('display_name, avatar_url')
+            .eq('user_id', u.id)
+            .maybeSingle();
+          name = profile?.display_name ?? null;
+          avatar = profile?.avatar_url ?? null;
+        } catch {
+          /* 忽略档案读取错误 */
+        }
+        if (!active) return;
+        setUser({ isAnon: !!u.is_anonymous, name, avatar });
+      } catch {
+        if (active) setUser(null);
+      } finally {
+        if (active) setLoaded(true);
       }
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('display_name, avatar_url')
-        .eq('user_id', u.id)
-        .maybeSingle();
-      if (!active) return;
-      setUser({
-        isAnon: !!u.is_anonymous,
-        name: profile?.display_name ?? null,
-        avatar: profile?.avatar_url ?? null,
-      });
-      setLoaded(true);
     };
     load();
     const { data: sub } = supabase.auth.onAuthStateChange(() => load());
