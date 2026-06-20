@@ -11,6 +11,11 @@ import { IconBallFootball, IconClock, IconMapPin } from '@tabler/icons-react';
 
 export const revalidate = 120;
 
+// 启用按需 ISR：动态 id 首次访问时渲染并缓存（否则该路由默认纯动态、不缓存）。
+export function generateStaticParams() {
+  return [];
+}
+
 const LOCALE_TAG: Record<Locale, string> = { en: 'en-US', zh: 'zh-CN', es: 'es-ES' };
 
 export async function generateMetadata({

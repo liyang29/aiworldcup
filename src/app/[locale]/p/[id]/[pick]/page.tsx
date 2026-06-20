@@ -11,6 +11,11 @@ import { IconBallFootball, IconArrowRight } from '@tabler/icons-react';
 
 export const revalidate = 120;
 
+// 启用按需 ISR：动态 id/pick 首次访问时渲染并缓存。
+export function generateStaticParams() {
+  return [];
+}
+
 function parsePick(pick: string): [number, number] | null {
   const m = /^(\d{1,2})-(\d{1,2})$/.exec(pick);
   return m ? [Number(m[1]), Number(m[2])] : null;
