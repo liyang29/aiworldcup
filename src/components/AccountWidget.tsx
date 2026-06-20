@@ -21,30 +21,24 @@ export default function AccountWidget({ t }: { t: AccountT }) {
     let active = true;
     const load = async () => {
       try {
+        // 用 getSession（本地读 cookie，不发网络请求）而非 getUser（会网络验证、国内可能卡住）
         const {
-          data: { user: u },
-        } = await supabase.auth.getUser();
+          data: { session },
+        } = await supabase.auth.getSession();
+        const u = session?.user ?? null;
         if (!active) return;
         if (!u) {
           setUser(null);
           return;
         }
-        // 读档案失败不影响"已登录"显示（用默认头像兜底）
-        let name: string | null = null;
-        let avatar: string | null = null;
-        try {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('display_name, avatar_url')
-            .eq('user_id', u.id)
-            .maybeSingle();
-          name = profile?.display_name ?? null;
-          avatar = profile?.avatar_url ?? null;
-        } catch {
-          /* 忽略档案读取错误 */
-        }
-        if (!active) return;
-        setUser({ isAnon: !!u.is_anonymous, name, avatar });
+        // 头部只用 session 里本地自带的 user_metadata（Google 登录带 name/avatar），
+        // 不发任何网络请求 → 国内也不会卡。
+        const meta = (u.user_metadata ?? {}) as Record<string, string | undefined>;
+        setUser({
+          isAnon: !!u.is_anonymous,
+          name: meta.full_name ?? meta.name ?? null,
+          avatar: meta.avatar_url ?? meta.picture ?? null,
+        });
       } catch {
         if (active) setUser(null);
       } finally {
