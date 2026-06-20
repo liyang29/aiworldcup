@@ -1,62 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { IconBrandGoogle, IconLogout, IconUser } from '@tabler/icons-react';
 import { signInWithGoogle, signOut } from '@/lib/auth/actions';
-import { createClient } from '@/lib/supabase/client';
 
+export type AccountUser = { isAnon: boolean; name?: string | null; avatar?: string | null };
 export type AccountT = { signIn: string; signInGoogle: string; signOut: string; guest: string };
-type AccountUser = { isAnon: boolean; name: string | null; avatar: string | null };
 
-// 客户端自取登录态（不在服务端渲染里读 cookie），这样任何页面都能被 ISR 缓存而不泄露/写死登录态。
-export default function AccountWidget({ t }: { t: AccountT }) {
+export default function AccountWidget({ user, t }: { user: AccountUser | null; t: AccountT }) {
   const pathname = usePathname();
   const next = pathname || '/';
-  const [user, setUser] = useState<AccountUser | null>(null);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    const supabase = createClient();
-    let active = true;
-    const load = async () => {
-      try {
-        // 用 getSession（本地读 cookie，不发网络请求）而非 getUser（会网络验证、国内可能卡住）
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        const u = session?.user ?? null;
-        if (!active) return;
-        if (!u) {
-          setUser(null);
-          return;
-        }
-        // 头部只用 session 里本地自带的 user_metadata（Google 登录带 name/avatar），
-        // 不发任何网络请求 → 国内也不会卡。
-        const meta = (u.user_metadata ?? {}) as Record<string, string | undefined>;
-        setUser({
-          isAnon: !!u.is_anonymous,
-          name: meta.full_name ?? meta.name ?? null,
-          avatar: meta.avatar_url ?? meta.picture ?? null,
-        });
-      } catch {
-        if (active) setUser(null);
-      } finally {
-        if (active) setLoaded(true);
-      }
-    };
-    load();
-    const { data: sub } = supabase.auth.onAuthStateChange(() => load());
-    return () => {
-      active = false;
-      sub.subscription.unsubscribe();
-    };
-  }, []);
-
-  // 加载中：占位，避免抖动
-  if (!loaded) {
-    return <span className="h-6 w-6 rounded-full bg-hairline/50" aria-hidden="true" />;
-  }
 
   // 已登录真实账号：头像 + 退出
   if (user && !user.isAnon) {

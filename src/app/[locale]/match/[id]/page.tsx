@@ -1,4 +1,4 @@
-import { createPublicClient } from '@/lib/supabase/public';
+import { createClient } from '@/lib/supabase/server';
 import StanceBoard, { type Pred } from '@/components/match/StanceBoard';
 import LocalTime from '@/components/LocalTime';
 import ShareButtons from '@/components/ShareButtons';
@@ -9,12 +9,7 @@ import { teamName } from '@/i18n/teams';
 import type { Locale } from '@/i18n/config';
 import { IconBallFootball, IconClock, IconMapPin } from '@tabler/icons-react';
 
-export const revalidate = 120;
-
-// 启用按需 ISR：动态 id 首次访问时渲染并缓存（否则该路由默认纯动态、不缓存）。
-export function generateStaticParams() {
-  return [];
-}
+export const dynamic = 'force-dynamic';
 
 const LOCALE_TAG: Record<Locale, string> = { en: 'en-US', zh: 'zh-CN', es: 'es-ES' };
 
@@ -24,7 +19,7 @@ export async function generateMetadata({
   params: { id: string; locale: Locale };
 }): Promise<import('next').Metadata> {
   const dict = await getDictionary(params.locale);
-  const supabase = createPublicClient();
+  const supabase = createClient();
   const { data } = await supabase
     .from('matches')
     .select('home:home_team_id(name), away:away_team_id(name)')
@@ -55,7 +50,7 @@ export default async function MatchPage({
 }) {
   const dict = await getDictionary(params.locale);
   const t = dict.match;
-  const supabase = createPublicClient();
+  const supabase = createClient();
 
   const { data } = await supabase
     .from('matches')
