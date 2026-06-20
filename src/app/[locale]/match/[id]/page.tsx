@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createPublicClient } from '@/lib/supabase/public';
 import StanceBoard, { type Pred } from '@/components/match/StanceBoard';
 import LocalTime from '@/components/LocalTime';
 import ShareButtons from '@/components/ShareButtons';
@@ -9,7 +9,7 @@ import { teamName } from '@/i18n/teams';
 import type { Locale } from '@/i18n/config';
 import { IconBallFootball, IconClock, IconMapPin } from '@tabler/icons-react';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 
 const LOCALE_TAG: Record<Locale, string> = { en: 'en-US', zh: 'zh-CN', es: 'es-ES' };
 
@@ -19,7 +19,7 @@ export async function generateMetadata({
   params: { id: string; locale: Locale };
 }): Promise<import('next').Metadata> {
   const dict = await getDictionary(params.locale);
-  const supabase = createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from('matches')
     .select('home:home_team_id(name), away:away_team_id(name)')
@@ -50,7 +50,7 @@ export default async function MatchPage({
 }) {
   const dict = await getDictionary(params.locale);
   const t = dict.match;
-  const supabase = createClient();
+  const supabase = createPublicClient();
 
   const { data } = await supabase
     .from('matches')

@@ -2,31 +2,14 @@ import Link from 'next/link';
 import { IconTrophy } from '@tabler/icons-react';
 import LangSwitcher from './LangSwitcher';
 import AccountWidget from './AccountWidget';
-import { createClient } from '@/lib/supabase/server';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
 
-export default async function SiteHeader({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+// 注意：不在此处读 cookie/登录态（登录态由 AccountWidget 在客户端自取），
+// 否则布局会让所有页面被迫动态、无法缓存。
+export default function SiteHeader({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const nav = dict.nav;
   const base = `/${locale}`;
-
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  let acctUser = null;
-  if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('display_name, avatar_url')
-      .eq('user_id', user.id)
-      .maybeSingle();
-    acctUser = {
-      isAnon: !!user.is_anonymous,
-      name: profile?.display_name ?? null,
-      avatar: profile?.avatar_url ?? null,
-    };
-  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-hairline bg-canvas/90 backdrop-blur">
@@ -65,7 +48,7 @@ export default async function SiteHeader({ locale, dict }: { locale: Locale; dic
           >
             {dict.predict.navLabel}
           </Link>
-          <AccountWidget user={acctUser} t={dict.account} />
+          <AccountWidget t={dict.account} />
           <LangSwitcher current={locale} />
         </nav>
       </div>

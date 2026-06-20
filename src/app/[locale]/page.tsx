@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createPublicClient } from '@/lib/supabase/public';
 import StanceBoard, { type Pred } from '@/components/match/StanceBoard';
 import ScheduleList, { type SchedMatch } from '@/components/schedule/ScheduleList';
 import ModelAvatar, { logoFor } from '@/components/ModelAvatar';
@@ -7,6 +7,7 @@ import LocalTime from '@/components/LocalTime';
 import CollapsibleStance from '@/components/CollapsibleStance';
 import ScoringRules from '@/components/ScoringRules';
 import HumanBoard from '@/components/HumanBoard';
+import MyRankClient from '@/components/MyRankClient';
 import { fetchHumanBoard } from '@/lib/leaderboard';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
@@ -23,7 +24,7 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 const LOCALE_TAG: Record<Locale, string> = { en: 'en-US', zh: 'zh-CN', es: 'es-ES' };
 
@@ -51,7 +52,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
   const locale = params.locale;
   const dict = await getDictionary(locale);
   const t = dict.home;
-  const supabase = createClient();
+  const supabase = createPublicClient();
 
   // 每场被预测了几个模型（首页只展示"有 AI 预测"的比赛，避免顶上空比赛）
   const { data: predMatchRows } = await supabase
@@ -135,11 +136,8 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
     .order('kickoff_utc', { ascending: true });
   const allMatches = (allMatchesData ?? []) as unknown as SchedMatch[];
 
-  // 人类榜（首页精简版：Top5 + 我的排名）
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const { rows: humanRows, myRank } = await fetchHumanBoard(supabase, 10, user?.id ?? null);
+  // 人类榜（首页精简版 Top10，公共数据）；"我的排名"在客户端 MyRankClient 里取（保证页面可缓存）
+  const { rows: humanRows } = await fetchHumanBoard(supabase, 10, null);
 
   // 首页固定展示「一前一后」两场——都必须有 AI 预测：
   //   upcoming = 有预测的下一场即将开赛（紧凑卡，赛前邀请用户预测）
@@ -368,13 +366,20 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
             </div>
             <HumanBoard
               rows={humanRows}
-              myRank={myRank}
+              myRank={null}
               t={{
                 you: dict.predict.you,
                 yourRank: dict.predict.yourRank,
                 rankFmt: dict.predict.rankFmt,
                 ptsUnit: dict.predict.ptsUnit,
                 humanEmpty: dict.predict.humanEmpty,
+              }}
+            />
+            <MyRankClient
+              t={{
+                yourRank: dict.predict.yourRank,
+                rankFmt: dict.predict.rankFmt,
+                ptsUnit: dict.predict.ptsUnit,
               }}
             />
           </div>

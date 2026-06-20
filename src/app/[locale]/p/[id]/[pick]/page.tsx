@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { createPublicClient } from '@/lib/supabase/public';
 import StanceBoard, { type Pred } from '@/components/match/StanceBoard';
 import { getDictionary, fill } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
@@ -9,7 +9,7 @@ import { teamName } from '@/i18n/teams';
 import BackLink from '@/components/BackLink';
 import { IconBallFootball, IconArrowRight } from '@tabler/icons-react';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 
 function parsePick(pick: string): [number, number] | null {
   const m = /^(\d{1,2})-(\d{1,2})$/.exec(pick);
@@ -17,7 +17,7 @@ function parsePick(pick: string): [number, number] | null {
 }
 
 async function fetchTeams(id: string) {
-  const supabase = createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from('matches')
     .select('home:home_team_id(name), away:away_team_id(name)')
@@ -63,7 +63,7 @@ export default async function SharePredictionPage({
   const t = dict.match;
   const sc = dict.sharecard;
   const pk = parsePick(params.pick);
-  const supabase = createClient();
+  const supabase = createPublicClient();
 
   const { data } = await supabase
     .from('matches')
