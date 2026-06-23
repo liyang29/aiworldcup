@@ -4,6 +4,8 @@ import { getDictionary } from '@/i18n/dictionaries';
 import type { Locale } from '@/i18n/config';
 import PredictForm from '@/components/predict/PredictForm';
 import ScoringRules from '@/components/ScoringRules';
+import CollapsibleStance from '@/components/CollapsibleStance';
+import { type Pred } from '@/components/match/StanceBoard';
 import LocalTime from '@/components/LocalTime';
 import ShareButtons from '@/components/ShareButtons';
 import { IconBallFootball, IconClock, IconCheck, IconUser, IconScale, IconArrowRight } from '@tabler/icons-react';
@@ -49,7 +51,7 @@ export default async function PredictPage({
 
   const { data: upcomingData } = await supabase
     .from('matches')
-    .select('id, kickoff_utc, home:home_team_id(name, flag_url), away:away_team_id(name, flag_url)')
+    .select('id, stage, kickoff_utc, home:home_team_id(name, flag_url), away:away_team_id(name, flag_url)')
     .eq('status', 'scheduled')
     .gt('kickoff_utc', new Date().toISOString())
     .order('kickoff_utc', { ascending: true })
@@ -57,6 +59,16 @@ export default async function PredictPage({
   const upcoming = (upcomingData ?? []) as any[];
 
   const selected = upcoming.find((m) => m.id === searchParams.match) ?? upcoming[0];
+
+  // 选中比赛的 AI 预测（投票页给用户参考，默认收起）
+  let selPreds: Pred[] = [];
+  if (selected) {
+    const { data } = await supabase
+      .from('model_predictions')
+      .select('pred_home, pred_away, reasoning, points, pred_advance_team_id, model:model_id(name, provider)')
+      .eq('match_id', selected.id);
+    selPreds = (data ?? []) as unknown as Pred[];
+  }
 
   const {
     data: { user },
@@ -139,6 +151,24 @@ export default async function PredictPage({
               }}
             />
           )}
+        </section>
+      )}
+
+      {/* 选中比赛的 AI 预测（参考用，默认收起，避免照抄） */}
+      {selected && selPreds.length > 0 && (
+        <section className="mt-6">
+          <h2 className="mb-3 inline-flex items-center gap-2 text-base font-medium text-ink">
+            <IconBallFootball size={18} /> {dict.match.sectionTitle}
+          </h2>
+          <CollapsibleStance
+            predictions={selPreds}
+            homeName={teamName(selected.home?.name, locale) || '?'}
+            awayName={teamName(selected.away?.name, locale) || '?'}
+            isKnockout={selected.stage !== 'group'}
+            t={dict.stance}
+            expandLabel={dict.home.expand}
+            collapseLabel={dict.home.collapse}
+          />
         </section>
       )}
 
